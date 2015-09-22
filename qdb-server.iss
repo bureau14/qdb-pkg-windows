@@ -26,9 +26,9 @@ AppVersion={#QdbVersion}
 Compression=lzma
 DefaultDirName={pf}\quasardb
 DefaultGroupName=quasardb
-LicenseFile={#QdbSourceDir}/license.txt
+LicenseFile=license.txt
 OutputBaseFilename={#QdbSetupBaseName}
-OutputDir={#QdbOutputDir}
+OutputDir=.
 SignTool=Standard /a /du https://www.quasardb.net/ /d $qqdb server installer$q $f"
 SolidCompression=yes
 WizardImageFile=WizardImage.bmp
@@ -51,21 +51,21 @@ Name: "{app}\log"; Flags: uninsneveruninstall
 Name: "{app}\db"; Flags: uninsneveruninstall
 
 [Files]
-Source: "{#QdbOutputDir}\qdbd.exe"; DestDir: "{app}\bin"; Flags: ignoreversion; 
-Source: "{#QdbOutputDir}\qdb_service.exe"; DestDir: "{app}\bin"; Flags: ignoreversion; 
-Source: "{#QdbOutputDir}\qdb_bench.exe"; DestDir: "{app}\bin"; Flags: ignoreversion; 
-Source: "{#QdbOutputDir}\qdb_httpd.exe"; DestDir: "{app}\bin"; Flags: ignoreversion; 
-Source: "{#QdbOutputDir}\qdb_http_service.exe"; DestDir: "{app}\bin"; Flags: ignoreversion;
-Source: "{#QdbOutputDir}\qdbsh.exe"; DestDir: "{app}\bin"; Flags: ignoreversion; 
-Source: "{#QdbOutputDir}\qdb_max_conn.exe"; DestDir: "{app}\bin"; Flags: ignoreversion; 
-Source: "{#QdbOutputDir}\qdb_dbtool.exe"; DestDir: "{app}\bin"; Flags: ignoreversion; 
-Source: "{#QdbOutputDir}\leveldbutil.exe"; DestDir: "{app}\bin"; Flags: ignoreversion;
-Source: "{#QdbOutputDir}\qdb_api.dll"; DestDir: "{app}\bin"; Flags: ignoreversion; 
-Source: "{#QdbOutputDir}\qdb_generate_config.exe"; DestDir: "{app}\bin"; Flags: ignoreversion; 
+Source: "{#QdbOutputDir}\bin\qdbd.exe"; DestDir: "{app}\bin"; Flags: ignoreversion; 
+Source: "{#QdbOutputDir}\bin\qdb_service.exe"; DestDir: "{app}\bin"; Flags: ignoreversion; 
+Source: "{#QdbOutputDir}\bin\qdb_bench.exe"; DestDir: "{app}\bin"; Flags: ignoreversion; 
+Source: "{#QdbOutputDir}\bin\qdb_httpd.exe"; DestDir: "{app}\bin"; Flags: ignoreversion; 
+Source: "{#QdbOutputDir}\bin\qdb_http_service.exe"; DestDir: "{app}\bin"; Flags: ignoreversion;
+Source: "{#QdbOutputDir}\bin\qdbsh.exe"; DestDir: "{app}\bin"; Flags: ignoreversion; 
+Source: "{#QdbOutputDir}\bin\qdb_max_conn.exe"; DestDir: "{app}\bin"; Flags: ignoreversion; 
+Source: "{#QdbOutputDir}\bin\qdb_dbtool.exe"; DestDir: "{app}\bin"; Flags: ignoreversion; 
+Source: "{#QdbOutputDir}\bin\leveldbutil.exe"; DestDir: "{app}\bin"; Flags: ignoreversion;
+Source: "{#QdbOutputDir}\bin\qdb_api.dll"; DestDir: "{app}\bin"; Flags: ignoreversion; 
+Source: "{#QdbOutputDir}\bin\qdb_generate_config.exe"; DestDir: "{app}\bin"; Flags: ignoreversion; 
 
-Source: "{#QdbReadme}"; DestDir: "{app}\doc"; Flags: isreadme
-Source: "{#QdbSourceDir}\license.txt"; DestDir: "{app}\doc"
-Source: "{#QdbSourceDir}\qdb\backend\gui\admin\*"; DestDir: "{app}\bin\console"; Flags: recursesubdirs
+Source: "readme.txt"; DestDir: "{app}\doc"; Flags: isreadme
+Source: "license.txt"; DestDir: "{app}\doc"
+Source: "{#QdbOutputDir}\bin\html\*"; DestDir: "{app}\bin\console"; Flags: recursesubdirs
 
 [Run]
 ; install services

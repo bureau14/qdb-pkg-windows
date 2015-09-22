@@ -1,0 +1,360 @@
+QUASARDB SOFTWARE LICENSE AND PRODUCT SUPPORT AGREEMENT
+
+This is a reminder of some key articles of the license agreement. Please
+refer to your signed license agreement for further information.
+
+Article 3 - SCOPE OF THE LICENSED RIGHTS
+----------------------------------------
+
+3.1 Software Use
+
+Provided the Client has paid the applicable license fees, QUASARDB SAS grants 
+the Client a non-exclusive, non-transferable right to load, store, execute and
+modify (only as described in the Documentation) ("Use") the object code
+version of the Software specifically limited to the Licensed Configuration as
+indicated on the Client's order form or purchase order ("Order") when he
+purchased the Software.
+
+No Concurrent User may use the Software as a Subscriber unless such Concurrent
+User is also an authorized Subscriber and vice versa. The specific conditions
+of use of the Software by each type of user are detailed in the Special
+Provisions.
+
+3.2 Updates and Upgrades
+
+Provided the Client has ordered and paid for Product Support, his Use of the
+Software includes Updates and Upgrades QUASARDB SAS provides to the Client.
+
+3.3 Runtime programs
+
+The Client may use Run-time Program(s) and create or alter tables or reports
+produced by the Software solely for the purposes of operating the Software.
+Run-time Programs(s) used beyond the limitations pursuant to this Agreement
+will violate the terms of this Agreement and the Client must cease such use
+immediately.
+
+3.4 Back-up copies
+
+The Client may do a reasonable number of back-up copies for his own archival
+purposes
+
+Article 4 - USE RESTRICTIONS
+----------------------------
+
+4.1 Software modification and reverse engineering
+
+Except as expressly allowed under this Agreement, the Client may not copy
+(except for a reasonable number of back-up copies for his own archival
+purposes), alter, merge, modify, translate, adapt in any way, or prepare any
+derivative work of the Software.
+
+Except as permitted by law, the Client may not reverse engineer, disassemble,
+decompile, or otherwise attempt to reconstruct or discover any source code
+(other than readily user accessible source code, if any), underlying ideas,
+algorithms, file formats or programming interfaces of the Software, or allow
+others to attempt any of the foregoing.
+
+The Client may not loan, rent, lease, provide a service for which the Client
+charges a fee, license or otherwise transfer the Software or any copy thereof,
+to or for the benefit of a third party.  The Client may not delete or change
+any of the proprietary rights notices of QUASARDB SAS and its suppliers 
+appearing on the Software or Documentation and the Client agrees to reproduce
+all such notices on each copy he is permitted to make under this Agreement.
+
+4.2 Interoperability
+
+In the event the Client needs to provide for interoperability with his own
+software or hardware, the Client must first contact QUASARDB SAS to receive
+such interoperability assistance and the Client will not reverse engineer the
+Software on his own.
+
+Article 6 - CONFORMITY
+----------------------
+
+QUASARDB SAS guarantees the conformity of the Software to the specifications
+mentioned in the Documentation from the date of installation of the Software
+by QUASARDB SAS and/or from the date of validation by QUASARDB SAS of the
+installation by the Client.
+
+Article 7 - THIRD PARTY SOFTWARE
+--------------------------------
+
+Run-time licenses to certain Software owned or licensed by third parties
+("Third Party Software") are necessary for the proper operation of the
+Software. A list of Third Party Software is available from QUASARDB SAS. The
+Client is solely responsible for obtaining the required licenses, sublicenses
+or technical support for any Third Party Software, as well as any licenses or
+sublicenses for the operating system or other Software necessary to operate
+the Client's hardware platform.
+
+Article 11 - PRODUCT SUPPORT
+----------------------------
+
+Provided the Client has paid the Product Support applicable fees, QUASARDB SAS
+grants the Client the Product Support services as detailed below and on the
+QUASARDB SAS website.
+
+11.1 Term
+
+Product Support begins at the end of the Limited Warranty Period specified in
+Article 12.1 ("Limited Warranty") below.
+
+Unless QUASARDB SAS receives written notice of cancellation thirty (30) days
+prior to the anniversary date of any Product Support ordered, Product Support
+shall renew each year without written notice and shall be subject to the then
+current Product Support fees.
+
+11.2 Access to support and use restrictions
+
+Subject to the terms of this Agreement and timely payment of the fees
+described in Article 3.1 and 3.2 above, the Client shall have unlimited access
+to the Support Site via the Internet solely for the Client's own internal use
+to diagnose and resolve any Errors that occur in the Software.
+
+QUASARDB SAS shall provide for technical assistance exclusively online (by
+email) from Monday through Friday, 9:00 am to 6:00 pm (local time for QUASARDB
+SAS designated site) excluding French national holidays.
+
+QUASARDB SAS shall make its best efforts to reply to any technical assistance
+request within forty-eight (48) business hours of receipt of the Client's
+request.
+
+"Business hours" means the normal business hours of the QUASARDB SAS office 
+that "supplies the support services.
+
+Compliance with Laws.
+
+The Client agrees: (i) not to use the Support Site for unlawful or wrongful
+purposes, including, but not limited to, distributing material that (a) is
+copyrighted (except to the extent expressly permitted by the copyright owner),
+(b) is obscene, libelous, harassing or discriminatory, (c) is protected by
+trade secret, (d) is an invasion of the privacy of a third party, (e) creates
+a clear and present danger, or (f) advocates unlawful conduct;  (ii)    not to
+interfere or disrupt networks connected to the Support Site; and  (iii)   to
+comply with all regulations, policies and procedures of networks connected to
+the Support Site.
+
+11.3 Supported Releases
+
+QUASARDB SAS shall support the current version of the Software for not more
+than twelve (12) months following the general availability release of the next
+version.
+
+QUASARDB SAS will notify the Client before discontinuing support for a given
+release version.
+
+QUASARDB SAS will use commercially reasonable efforts to offer continued 
+support of previous releases, but makes no promises to do so.
+
+11.4 Parties Obligations
+
+QUASARDB SAS agrees to use commercially reasonable efforts to provide the 
+Product Support purchased by the Client. If support lapses and the Client
+wishes to renew support at a later date, the Client must purchase support 
+retroactive to the date of lapse, and the Client may be required to pay an 
+additional reinstatement fee.
+
+11.5 Product Support fees and charges
+
+For any Product Support subscribed the Client undertakes to pay the applicable
+fees which amounts and terms are mentioned on the Special Provisions. Product
+Support fees are non-refundable and the Client shall be responsible for and
+agree to pay in full any and all taxes resulting from this Agreement or any
+activities under this Agreement except for taxes based upon QUASARDB SAS's
+income.
+
+11.6 Software modification
+
+If the Client modifies the Software in any way, other than as described in the
+Documentation, QUASARDB SAS reserves the right, at its sole discretion, to
+charge and invoice the Client for the time and materials required to diagnose
+and remedy or attempt to remedy the problem at QUASARDB SAS's then current 
+rate for QUASARDB SAS professional services.
+
+QUASARDB SAS does not warrant that it will be able to successfully resolve 
+such problems. If such modifications occur, QUASARDB SAS reserves the right to
+refuse Product Support until and unless the Software has been rendered 
+compliant with the Documentation.
+
+Article 12 - WARRANTY
+---------------------
+
+12.1 Software Warranty
+
+For thirty (30) days from downloading the Software (or the minimum limited
+warranty period allowed if applicable law does not permit a 30 day limited
+warranty) ("Limited Contractual Warranty Period"), QUASARDB SAS warrants that 
+the Software will substantially conform to the Documentation.
+
+Any misuse or unauthorized modifications of the Software, including but not
+limited to any and all modifications to the Software's user accessible source
+code and configuration files will void this limited warranty. Further, using
+any Software program, of any nature whatsoever, not supplied by QUASARDB SAS 
+that updates or modifies the Software other than as described in the 
+Documentation, will void this limited warranty.
+
+Except as specifically provided herein, the Software is provided "as is" and
+QUASARDB SAS makes no warranty, representation, promise or guarantee, either
+express, implied, statutory or otherwise, with respect to the Software or
+related services, including but not limited to their quality, performance,
+merchantability, fitness for a particular purpose and, subject to Article 14
+below, non-infringement of third party rights, or those arising by law,
+statute, usage of trade or course of dealing.
+
+For Run-Time Programs and other software products owned by third party
+suppliers of QUASARDB SAS, QUASARDB SAS's third party suppliers and QUASARDB 
+SAS on their behalf, make no warranty under this agreement express or implied,
+including, but not limited to the implied warranties of merchantability and
+fitness for a particular purpose.
+
+12.2 Product Support Warranty
+
+a) Limited Warranty
+
+QUASARDB SAS warrants that the Product Support provided hereunder will be
+performed in a good and workmanlike manner.
+
+QUASARDB SAS does not warrant it will be able to successfully resolve any 
+Errors.
+
+b) Support Site Warranty
+
+QUASARDB SAS will use commercially reasonable efforts to maintain availability
+of the Support Site during the term of this Agreement. The following events
+("Contingencies") shall not count against QUASARDB SAS when computing
+availability of the Support Site:  (i) any latency or downtime due to the
+Client's acts or omissions, (ii) acts of unauthorized third parties, (iii)
+scheduled maintenance, (iv) Internet latency, failures or outages, (v) third
+party acts or omissions over which QUASARDB SAS has no control, and (vi) 
+problems associated with the Client's hardware or Software used to access the
+Support Site.
+
+The Client's sole and exclusive remedy for QUASARDB SAS's failure to meet the
+availability level stated in this Article 12.2 b) shall be to (i) send a
+message to the email address provided in accompanying documentation, or (ii)
+contact the Client's QUASARDB SAS sales representative.
+
+QUASARDB SAS shall have no responsibility for: (i) correcting Errors in any
+Software modified by the Client or any third party; (ii) Errors in the
+Software due to (a) failure of computer hardware, equipment or Software not
+provided by QUASARDB SAS, or (b) accident, neglect, misuse, failure of 
+electric power, adverse environmental conditions, catastrophe, negligence of 
+the Client or improper use; or (iii) on-site technical support.
+
+If QUASARDB SAS establishes, in its reasonable discretion, that: (i) no Error
+existed; or (ii) the Error resulted from any of the circumstances described in
+the immediately preceding paragraph, then QUASARDB SAS shall invoice the 
+Client for its reasonable services in investigating or correcting the Error at
+QUASARDB SAS's then-current rate for consulting services.
+
+12.3 Remedies under the Limited Contractual Warranty
+
+QUASARDB SAS's entire liability and the Client's sole and exclusive remedy for
+failure to meet the remedies in (i) and (ii) above shall be limited to
+replacement of the Software without charge; in the event QUASARDB SAS is
+unable to provide conforming replacement Software, QUASARDB SAS shall refund
+the purchase price of the Software paid by the Client.
+
+QUASARDB SAS's entire liability and the Client's sole and exclusive remedy for
+failure to meet the limited warranty in article 12 above shall be, at QUASARDB
+SAS's option, either to (i) correct the error, or (ii) help the client work
+around or avoid the error.
+
+The warranty and remedies of this section are exclusive and in lieu of all
+others, oral or written, expressed or implied. No QUASARDB SAS reseller, agent
+or employee is authorized to make modifications or additions to this warranty.
+
+Article 13 - LIMITATION OF LIABILITY
+------------------------------------
+
+The Software is inherently complex and may not be completely free from errors.
+It is the Client's responsibility to verify the Client's work and make backup
+copies. QUASARDB SAS will not be responsible for the Client's failure to do
+so.
+
+In no event will QUASARDB SAS or QUASARDB SAS's suppliers will be liable for
+special, incidental, consequential or exemplary damages, suffered by any
+person including the Client or the Client's clients, arising out of this
+agreement or out of the use of the Software or for services provided by 
+QUASARDB SAS, including, without limitation, damages or costs relating to the
+loss of profits, business, goodwill, data or computer programs, even if 
+advised of the possibility of such damages, or for any similar claim against 
+the Client by another party. The parties agree that QUASARDB SAS's third party
+suppliers will be a third party beneficiary of this Agreement.
+
+The above exclusion of incidental and consequential damages may not be
+enforceable under some applicable laws, so such exclusion may not apply to the
+Client. Neither QUASARDB SAS nor its suppliers will be liable for direct or 
+other damages hereunder. The Client agrees to the allocation between the 
+Client and QUASARDB SAS of liability risk which is set forth in this section 
+and which is not otherwise allocated or disclaimed by any other section of 
+this agreement. In no case shall QUASARDB SAS's liability for money damages 
+exceed the license fees paid by the Client for the Software.
+
+Article 14 - INDEMNIFICATION
+----------------------------
+
+QUASARDB SAS will defend, indemnify and hold the Client harmless from 
+liability resulting from misappropriation of any trade secret or infringement
+of any copyright or French patent by the Software if the Client (i) notifies 
+QUASARDB SAS within twenty (20) days of the assertion of any such claim and 
+(ii) cooperates with QUASARDB SAS in the resolution of any such claim
+including permitting QUASARDB SAS to control the defense and settlement of 
+such claims. QUASARDB SAS shall not be liable for any infringement or 
+misappropriation claims related to (i) modification of the Software; (ii) 
+combination of the Software with hardware or Software not supplied by QUASARDB
+SAS; or (iii) use of other than the most current version of the Software if 
+the claim could have been avoided by use of such current version. QUASARDB SAS
+may, at its option, (i) obtain for the Client at QUASARDB SAS's cost the 
+continued right to Use the Software; (ii) replace or modify the Software so 
+that it is no longer infringing but remains functionally equivalent; or (iii)
+terminate this Agreement, accept return of the Software and Documentation and 
+refund to the Client the license fee paid less a reasonable amount for 
+depreciation.
+
+The foregoing states the Client's sole and exclusive remedy and QUASARDB SAS's
+sole and exclusive liability for any alleged infringement of any third party
+property rights.
+
+Article 16 - CONFIDENTIALITY
+----------------------------
+
+The Client agrees to keep confidential all trade secrets and other information
+and know-how that QUASARDB SAS provides to the Client and identifies as
+proprietary or confidential, or that due to the circumstances around the
+disclosure, should be treated as confidential, and will make no use of such
+information unless permitted under this Agreement.
+
+Article 17 - INTELLECTUAL PROPERTY AND OWNERSHIP
+------------------------------------------------
+
+All ownership of and title to any intellectual property rights, including but
+not limited to copyrights and trade secrets, in the Software belong to 
+QUASARDB SAS and its suppliers and are protected by French and international 
+copyright laws, other applicable intellectual property laws, and international
+treaty provisions. QUASARDB SAS owns all rights not expressly granted herein.
+
+QUASARDB SAS does not wish to receive confidential or proprietary ideas,
+suggestions, materials or other information. The Client acknowledges that the
+contents of the Support Site, including without limitation, any text,
+Software, music, sound, graphics, photographs, video or other material
+contained in the Support Site ("Content"), is protected by copyrights,
+trademarks, service marks, patents and other laws protecting proprietary
+information and trade secrets; therefore, the Client acknowledges that the
+Client is entitled only to use this Support Site as set forth in this
+Agreement, and may not copy, reproduce, distribute, publicly perform, publicly
+display, or otherwise create derivative works from the Content without the
+advance written approval of QUASARDB SAS to do so.
+
+Article 19 - CHOICE OF LAW-JURISDICTION-ARBITRATION
+---------------------------------------------------
+
+19.1 Choice of law
+
+This Agreement shall be governed by the laws of France.
+
+19.2 Choice of jurisdiction
+
+The competent courts of the Appeal Court of Paris have exclusive jurisdiction
+to settle any claim or arising out of or in connection with this Agreement or
+the legal relationships established by it.
