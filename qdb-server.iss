@@ -59,7 +59,6 @@ Source: "{#QdbOutputDir}\bin\qdb_http_service.exe"; DestDir: "{app}\bin"; Flags:
 Source: "{#QdbOutputDir}\bin\qdbsh.exe"; DestDir: "{app}\bin"; Flags: ignoreversion; 
 Source: "{#QdbOutputDir}\bin\qdb_max_conn.exe"; DestDir: "{app}\bin"; Flags: ignoreversion; 
 Source: "{#QdbOutputDir}\bin\qdb_dbtool.exe"; DestDir: "{app}\bin"; Flags: ignoreversion; 
-Source: "{#QdbOutputDir}\bin\leveldbutil.exe"; DestDir: "{app}\bin"; Flags: ignoreversion;
 Source: "{#QdbOutputDir}\bin\qdb_api.dll"; DestDir: "{app}\bin"; Flags: ignoreversion; 
 Source: "{#QdbOutputDir}\bin\qdb_generate_config.exe"; DestDir: "{app}\bin"; Flags: ignoreversion; 
 
