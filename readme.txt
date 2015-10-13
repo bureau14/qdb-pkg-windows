@@ -3,7 +3,7 @@ quasardb
 
 Thank you for using our software!
 
-Quasardb is a high-performance, scalable, persistant and peer-to-peer key/value database.
+Quasardb is a high-performance, scalable, persistent and peer-to-peer key/value database.
 
 Up to date documentation can be found at this address: https://doc.quasardb.net/
 
