@@ -1,1 +1,4 @@
-* text eol=crlf
+*.txt eol=crlf
+*.iss eol=crlf
+*.bat eol=crlf
+*.bmp -text
