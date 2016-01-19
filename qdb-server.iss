@@ -29,7 +29,7 @@ DefaultGroupName=quasardb
 LicenseFile=license.txt
 OutputBaseFilename={#QdbSetupBaseName}
 OutputDir=.
-; SignTool=Standard /a /du https://www.quasardb.net/ /d $qqdb server installer$q $f"
+; SignTool=Standard /a /du https://www.quasardb.net/ /d $qqdb qdbd installer$q $f"
 SolidCompression=yes
 WizardImageFile=WizardImage.bmp
 WizardSmallImageFile=WizardSmallImage.bmp
@@ -50,46 +50,58 @@ Name: "{app}\conf"; Flags: uninsneveruninstall
 Name: "{app}\log"; Flags: uninsneveruninstall
 Name: "{app}\db"; Flags: uninsneveruninstall
 
-[Files]
-Source: "{#QdbOutputDir}\bin\qdbd.exe"; DestDir: "{app}\bin"; Flags: ignoreversion; 
-Source: "{#QdbOutputDir}\bin\qdb_service.exe"; DestDir: "{app}\bin"; Flags: ignoreversion; 
-Source: "{#QdbOutputDir}\bin\qdb_bench.exe"; DestDir: "{app}\bin"; Flags: ignoreversion; 
-Source: "{#QdbOutputDir}\bin\qdb_httpd.exe"; DestDir: "{app}\bin"; Flags: ignoreversion; 
-Source: "{#QdbOutputDir}\bin\qdb_http_service.exe"; DestDir: "{app}\bin"; Flags: ignoreversion;
-Source: "{#QdbOutputDir}\bin\qdbsh.exe"; DestDir: "{app}\bin"; Flags: ignoreversion; 
-Source: "{#QdbOutputDir}\bin\qdb_max_conn.exe"; DestDir: "{app}\bin"; Flags: ignoreversion; 
-Source: "{#QdbOutputDir}\bin\qdb_dbtool.exe"; DestDir: "{app}\bin"; Flags: ignoreversion; 
-Source: "{#QdbOutputDir}\bin\qdb_api.dll"; DestDir: "{app}\bin"; Flags: ignoreversion; 
-Source: "{#QdbOutputDir}\bin\qdb_generate_config.exe"; DestDir: "{app}\bin"; Flags: ignoreversion; 
+[Types]
+Name: full;   Description: "Full installation"
+Name: server; Description: "Server installation"
+Name: client; Description: "Client installation"
+Name: custom; Description: "Custom installation"; Flags: iscustom
 
-Source: "readme.txt"; DestDir: "{app}\doc"; Flags: isreadme
-Source: "license.txt"; DestDir: "{app}\doc"
-Source: "{#QdbOutputDir}\bin\html\*"; DestDir: "{app}\bin\console"; Flags: recursesubdirs
+[Components]
+Name: qdbd;  Description: "Server (qdbd)";          Types: full server;
+Name: httpd; Description: "Web Bridge (qdb_httpd)"; Types: full server;
+Name: utils; Description: "Utilities (qdbsh...)";   Types: full client;
+Name: api;   Description: "C API (qdb_api.dll)";    Types: full client;
+
+[Files]
+Components: api;   Source: "{#QdbOutputDir}\bin\qdb_api.dll";                   DestDir: "{sys}";             Flags: ignoreversion; 
+Components: qdbd;  Source: "{#QdbOutputDir}\bin\qdb_dbtool.exe";                DestDir: "{app}\bin";         Flags: ignoreversion; 
+Components: qdbd;  Source: "{#QdbOutputDir}\bin\qdb_service.exe";               DestDir: "{app}\bin";         Flags: ignoreversion;
+Components: qdbd;  Source: "{#QdbOutputDir}\bin\qdbd.exe";                      DestDir: "{app}\bin";         Flags: ignoreversion; 
+Components: qdbd;  Source: "{#QdbOutputDir}\bin\qdbd_generate_config.exe";      DestDir: "{app}\bin";         Flags: ignoreversion; 
+Components: utils; Source: "{#QdbOutputDir}\bin\qdb_bench.exe";                 DestDir: "{app}\bin";         Flags: ignoreversion; 
+Components: utils; Source: "{#QdbOutputDir}\bin\qdb_max_conn.exe";              DestDir: "{app}\bin";         Flags: ignoreversion; 
+Components: utils; Source: "{#QdbOutputDir}\bin\qdbsh.exe";                     DestDir: "{app}\bin";         Flags: ignoreversion; 
+Components: httpd; Source: "{#QdbOutputDir}\bin\qdb_http_service.exe";          DestDir: "{app}\bin";         Flags: ignoreversion;
+Components: httpd; Source: "{#QdbOutputDir}\bin\qdb_httpd.exe";                 DestDir: "{app}\bin";         Flags: ignoreversion; 
+Components: httpd; Source: "{#QdbOutputDir}\bin\qdb_httpd_generate_config.exe"; DestDir: "{app}\bin";         Flags: ignoreversion; 
+Components: httpd; Source: "{#QdbOutputDir}\bin\html\*";                        DestDir: "{app}\bin\console"; Flags: recursesubdirs
+
+Source: "{#SourcePath}\readme.txt";  DestDir: "{app}\doc"; Flags: isreadme
+Source: "{#SourcePath}\license.txt"; DestDir: "{app}\doc"
 
 [Run]
-; install services
-Filename: "{app}\bin\qdb_service.exe"; Parameters: "/install"; Description: "install quasardb daemon service"; Flags: runascurrentuser runhidden
-Filename: "{app}\bin\qdb_http_service.exe"; Parameters: "/install"; Description: "install quasardb web service"; Flags: runascurrentuser runhidden
+Components: qdbd;  StatusMsg: "Install Server";       Filename: "{app}\bin\qdb_service.exe";      Parameters: "/install"; Flags: runascurrentuser runhidden
+Components: httpd; StatusMsg: "Install Web Bridge";   Filename: "{app}\bin\qdb_http_service.exe"; Parameters: "/install"; Flags: runascurrentuser runhidden
 
-; generate configuration files for qdb daemon and qdb web bridge
-Filename: "{app}\bin\qdb_generate_config.exe"; Parameters: """{app}\conf"" ""{app}\log"" ""{app}\db"" ""{app}\bin\console"""; Description: "generating quasardb configuration files"; Flags: runascurrentuser runhidden
+Components: qdbd;  StatusMsg: "Configure Server";     Filename: "{app}\bin\qdbd_generate_config.exe";      Parameters: """{app}\conf"" ""{app}\log"" ""{app}\db""";          Flags: runascurrentuser runhidden
+Components: httpd; StatusMsg: "Configure Web Bridge"; Filename: "{app}\bin\qdb_httpd_generate_config.exe"; Parameters: """{app}\conf"" ""{app}\log"" ""{app}\bin\console"""; Flags: runascurrentuser runhidden
 
-Filename: "sc.exe"; Parameters: "start qdbd" ; Flags: runhidden
-Filename: "sc.exe"; Parameters: "start qdb_httpd" ; Flags: runhidden  
+Components: qdbd;  StatusMsg: "Start Server";         Filename: "sc.exe"; Parameters: "start qdbd";      Flags: runhidden
+Components: httpd; StatusMsg: "Start Web Bridge";     Filename: "sc.exe"; Parameters: "start qdb_httpd"; Flags: runhidden  
 
 [UninstallRun]
-Filename: "sc.exe"; Parameters: "stop qdbd" ; Flags: runhidden
-Filename: "sc.exe"; Parameters: "stop qdb_httpd" ; Flags: runhidden  
+Components: qdbd;  StatusMsg: "Stop Server";          Filename: "sc.exe"; Parameters: "stop qdbd";      Flags: runhidden
+Components: httpd; StatusMsg: "Stop Web Bridge";      Filename: "sc.exe"; Parameters: "stop qdb_httpd"; Flags: runhidden  
 
-Filename: "{app}\bin\qdb_service.exe"; Parameters: "/remove"; Flags: runascurrentuser runhidden
-Filename: "{app}\bin\qdb_http_service.exe"; Parameters: "/remove"; Flags: runascurrentuser runhidden
+Components: qdbd;  StatusMsg: "Remove Server";        Filename: "{app}\bin\qdb_service.exe";      Parameters: "/remove"; Flags: runascurrentuser runhidden
+Components: httpd; StatusMsg: "Remove Web Bridge";    Filename: "{app}\bin\qdb_http_service.exe"; Parameters: "/remove"; Flags: runascurrentuser runhidden
 
 [Registry]
-Root: HKLM; Subkey: "SYSTEM\CurrentControlSet\Services\qdbd"; ValueType: string; ValueName: "ConfigFile"; ValueData: "{app}\conf\qdbd.conf"
-Root: HKLM; Subkey: "SYSTEM\CurrentControlSet\Services\qdb_httpd"; ValueType: string; ValueName: "ConfigFile"; ValueData: "{app}\conf\qdb_httpd.conf"
+Components: qdbd; Root: HKLM; Subkey: "SYSTEM\CurrentControlSet\Services\qdbd";      ValueType: string; ValueName: "ConfigFile"; ValueData: "{app}\conf\qdbd.conf"
+Components: httpd;    Root: HKLM; Subkey: "SYSTEM\CurrentControlSet\Services\qdb_httpd"; ValueType: string; ValueName: "ConfigFile"; ValueData: "{app}\conf\qdb_httpd.conf"
 
 [Icons]
-Name: "{group}\quasardb shell"; Filename: "{app}\bin\qdbsh.exe"
+Components: utils;  Name: "{group}\quasardb shell"; Filename: "{app}\bin\qdbsh.exe"
 Name: "{group}\{cm:ProgramOnTheWeb,{#MyAppName}}"; Filename: "{#MyAppURL}"
 Name: "{group}\{cm:UninstallProgram,{#MyAppName}}"; Filename: "{uninstallexe}"
 
