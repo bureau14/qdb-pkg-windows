@@ -59,11 +59,6 @@ ArchitecturesAllowed=x64
 [Languages]
 Name: "english"; MessagesFile: "compiler:Default.isl"
 
-[Dirs]
-Name: "{app}\conf"; Flags: uninsneveruninstall
-Name: "{app}\log"; Flags: uninsneveruninstall
-Name: "{app}\db"; Flags: uninsneveruninstall
-
 [Types]
 Name: full;   Description: "Full installation"
 Name: server; Description: "Server installation"
@@ -75,6 +70,11 @@ Name: qdbd;  Description: "Server (qdbd)";          Types: full server;
 Name: httpd; Description: "Web Bridge (qdb_httpd)"; Types: full server;
 Name: utils; Description: "Utilities (qdbsh...)";   Types: full client;
 Name: api;   Description: "C API (qdb_api.dll)";    Types: full client;
+
+[Dirs]
+Components: qdbd httpd; Name: "{app}\conf"; Flags: uninsneveruninstall
+Components: qdbd httpd; Name: "{app}\log"; Flags: uninsneveruninstall
+Components: qdbd httpd; Name: "{app}\db"; Flags: uninsneveruninstall
 
 [Files]
 Components: api;   Source: "{#QdbOutputDir}\bin\qdb_api.dll";           DestDir: "{sys}";                Flags: ignoreversion; 
@@ -94,6 +94,9 @@ Source: "{#SourcePath}\license.txt"; DestDir: "{app}\doc"
 [Run]
 Components: qdbd;  StatusMsg: "Install Server";       Filename: "{app}\bin\qdb_service.exe";      Parameters: "/install"; Flags: runascurrentuser runhidden
 Components: httpd; StatusMsg: "Install Web Bridge";   Filename: "{app}\bin\qdb_http_service.exe"; Parameters: "/install"; Flags: runascurrentuser runhidden
+
+Components: qdbd httpd;  StatusMsg: "Give access to log/";  Filename: "{sys}\icacls.exe";  Parameters: """{app}\log"" /grant LocalService:F"; Flags: runascurrentuser runhidden
+Components: qdbd httpd;  StatusMsg: "Give access to db/";   Filename: "{sys}\icacls.exe";  Parameters: """{app}\db"" /grant LocalService:F";  Flags: runascurrentuser runhidden
 
 Components: qdbd;  StatusMsg: "Configure Server";     Filename: "{app}\bin\qdbd.exe";      Parameters: """--gen-config={app}\conf\qdbd.conf"" ""--log-file={app}\log\qdbd.log"" ""--log-dump={app}\log\qdbd_error_dump.txt"" ""--root={app}\db"""; Check: not FileExists(ExpandConstant('{app}\conf\qdbd.conf')); Flags: runascurrentuser runhidden
 Components: httpd; StatusMsg: "Configure Web Bridge"; Filename: "{app}\bin\qdb_httpd.exe"; Parameters: """--gen-conf={app}\conf\qdb_httpd.conf"" ""--log-file={app}\log\qdb_httpd.log"" ""--log-dump={app}\log\qdb_httpd_error_dump.txt"" ""--root={app}\share\qdb\www"""; Check: not FileExists(ExpandConstant('{app}\conf\qdb_httpd.conf')); Flags: runascurrentuser runhidden
