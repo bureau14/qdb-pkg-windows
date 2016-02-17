@@ -77,15 +77,15 @@ Components: qdbd httpd; Name: "{app}\log"; Flags: uninsneveruninstall
 Components: qdbd httpd; Name: "{app}\db"; Flags: uninsneveruninstall
 
 [Files]
-Components: api;   Source: "{#QdbOutputDir}\bin\qdb_api.dll";           DestDir: "{sys}";                Flags: ignoreversion; 
-Components: qdbd;  Source: "{#QdbOutputDir}\bin\qdb_dbtool.exe";        DestDir: "{app}\bin";            Flags: ignoreversion; 
+Components: api;   Source: "{#QdbOutputDir}\bin\qdb_api.dll";           DestDir: "{sys}";                Flags: ignoreversion;
+Components: qdbd;  Source: "{#QdbOutputDir}\bin\qdb_dbtool.exe";        DestDir: "{app}\bin";            Flags: ignoreversion;
 Components: qdbd;  Source: "{#QdbOutputDir}\bin\qdb_service.exe";       DestDir: "{app}\bin";            Flags: ignoreversion;
-Components: qdbd;  Source: "{#QdbOutputDir}\bin\qdbd.exe";              DestDir: "{app}\bin";            Flags: ignoreversion; 
-Components: utils; Source: "{#QdbOutputDir}\bin\qdb_bench.exe";         DestDir: "{app}\bin";            Flags: ignoreversion; 
-Components: utils; Source: "{#QdbOutputDir}\bin\qdb_max_conn.exe";      DestDir: "{app}\bin";            Flags: ignoreversion; 
-Components: utils; Source: "{#QdbOutputDir}\bin\qdbsh.exe";             DestDir: "{app}\bin";            Flags: ignoreversion; 
+Components: qdbd;  Source: "{#QdbOutputDir}\bin\qdbd.exe";              DestDir: "{app}\bin";            Flags: ignoreversion;
+Components: utils; Source: "{#QdbOutputDir}\bin\qdb_bench.exe";         DestDir: "{app}\bin";            Flags: ignoreversion;
+Components: utils; Source: "{#QdbOutputDir}\bin\qdb_max_conn.exe";      DestDir: "{app}\bin";            Flags: ignoreversion;
+Components: utils; Source: "{#QdbOutputDir}\bin\qdbsh.exe";             DestDir: "{app}\bin";            Flags: ignoreversion;
 Components: httpd; Source: "{#QdbOutputDir}\bin\qdb_http_service.exe";  DestDir: "{app}\bin";            Flags: ignoreversion;
-Components: httpd; Source: "{#QdbOutputDir}\bin\qdb_httpd.exe";         DestDir: "{app}\bin";            Flags: ignoreversion; 
+Components: httpd; Source: "{#QdbOutputDir}\bin\qdb_httpd.exe";         DestDir: "{app}\bin";            Flags: ignoreversion;
 Components: httpd; Source: "{#QdbOutputDir}\share\qdb\www\*";           DestDir: "{app}\share\qdb\www";  Flags: recursesubdirs;
 
 Source: "{#SourcePath}\readme.txt";  DestDir: "{app}\doc"
@@ -98,15 +98,15 @@ Components: httpd; StatusMsg: "Install Web Bridge";   Filename: "{app}\bin\qdb_h
 Components: qdbd httpd;  StatusMsg: "Give access to log/";  Filename: "{sys}\icacls.exe";  Parameters: """{app}\log"" /grant LocalService:F"; Flags: runascurrentuser runhidden
 Components: qdbd httpd;  StatusMsg: "Give access to db/";   Filename: "{sys}\icacls.exe";  Parameters: """{app}\db"" /grant LocalService:F";  Flags: runascurrentuser runhidden
 
-Components: qdbd;  StatusMsg: "Configure Server";     Filename: "{app}\bin\qdbd.exe";      Parameters: """--gen-config={app}\conf\qdbd.conf"" ""--log-file={app}\log\qdbd.log"" ""--log-dump={app}\log\qdbd_error_dump.txt"" ""--root={app}\db"""; Check: not FileExists(ExpandConstant('{app}\conf\qdbd.conf')); Flags: runascurrentuser runhidden
-Components: httpd; StatusMsg: "Configure Web Bridge"; Filename: "{app}\bin\qdb_httpd.exe"; Parameters: """--gen-conf={app}\conf\qdb_httpd.conf"" ""--log-file={app}\log\qdb_httpd.log"" ""--log-dump={app}\log\qdb_httpd_error_dump.txt"" ""--root={app}\share\qdb\www"""; Check: not FileExists(ExpandConstant('{app}\conf\qdb_httpd.conf')); Flags: runascurrentuser runhidden
+Components: qdbd;  StatusMsg: "Configure Server";     Filename: "{app}\bin\qdbd.exe";      Parameters: """--gen-config={app}\conf\qdbd.conf""      ""--log-directory={app}\log"" ""--root={app}\db""";            Check: not FileExists(ExpandConstant('{app}\conf\qdbd.conf'));      Flags: runascurrentuser runhidden
+Components: httpd; StatusMsg: "Configure Web Bridge"; Filename: "{app}\bin\qdb_httpd.exe"; Parameters: """--gen-config={app}\conf\qdb_httpd.conf"" ""--log-directory={app}\log"" ""--root={app}\share\qdb\www"""; Check: not FileExists(ExpandConstant('{app}\conf\qdb_httpd.conf')); Flags: runascurrentuser runhidden
 
 Components: qdbd;  StatusMsg: "Start Server";         Filename: "sc.exe"; Parameters: "start qdbd";      Flags: runhidden
-Components: httpd; StatusMsg: "Start Web Bridge";     Filename: "sc.exe"; Parameters: "start qdb_httpd"; Flags: runhidden  
+Components: httpd; StatusMsg: "Start Web Bridge";     Filename: "sc.exe"; Parameters: "start qdb_httpd"; Flags: runhidden
 
 [UninstallRun]
 Components: qdbd;  StatusMsg: "Stop Server";          Filename: "sc.exe"; Parameters: "stop qdbd";      Flags: runhidden
-Components: httpd; StatusMsg: "Stop Web Bridge";      Filename: "sc.exe"; Parameters: "stop qdb_httpd"; Flags: runhidden  
+Components: httpd; StatusMsg: "Stop Web Bridge";      Filename: "sc.exe"; Parameters: "stop qdb_httpd"; Flags: runhidden
 
 Components: qdbd;  StatusMsg: "Remove Server";        Filename: "{app}\bin\qdb_service.exe";      Parameters: "/remove"; Flags: runascurrentuser runhidden
 Components: httpd; StatusMsg: "Remove Web Bridge";    Filename: "{app}\bin\qdb_http_service.exe"; Parameters: "/remove"; Flags: runascurrentuser runhidden
