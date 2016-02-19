@@ -1,7 +1,7 @@
 @setlocal enabledelayedexpansion
 
 @set SIGNTOOL=C:\Program Files (x86)\Windows Kits\8.1\bin\x86\signtool.exe
-@set CERTIFICATE_SHA1=111683AA5D55235EE6D5C9A3CF79575184519F9C
+@set CERTIFICATE_SHA1=AD1DCC5C75A87AECED3CD9FDE119467B4110E172
 
 @for /f "tokens=2 delims=-" %%i  in ('dir /b %1') do @set VERSION=%%i
 
