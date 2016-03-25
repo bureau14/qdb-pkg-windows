@@ -81,7 +81,6 @@ Components: api;   Source: "{#QdbOutputDir}\bin\qdb_api.dll";           DestDir:
 Components: qdbd;  Source: "{#QdbOutputDir}\bin\qdb_dbtool.exe";        DestDir: "{app}\bin";            Flags: ignoreversion;
 Components: qdbd;  Source: "{#QdbOutputDir}\bin\qdb_service.exe";       DestDir: "{app}\bin";            Flags: ignoreversion;
 Components: qdbd;  Source: "{#QdbOutputDir}\bin\qdbd.exe";              DestDir: "{app}\bin";            Flags: ignoreversion;
-Components: utils; Source: "{#QdbOutputDir}\bin\qdb_bench.exe";         DestDir: "{app}\bin";            Flags: ignoreversion;
 Components: utils; Source: "{#QdbOutputDir}\bin\qdb_max_conn.exe";      DestDir: "{app}\bin";            Flags: ignoreversion;
 Components: utils; Source: "{#QdbOutputDir}\bin\qdbsh.exe";             DestDir: "{app}\bin";            Flags: ignoreversion;
 Components: httpd; Source: "{#QdbOutputDir}\bin\qdb_http_service.exe";  DestDir: "{app}\bin";            Flags: ignoreversion;
