@@ -97,8 +97,8 @@ Components: httpd; StatusMsg: "Install Web Bridge";   Filename: "{app}\bin\qdb_h
 Components: qdbd httpd;  StatusMsg: "Give access to log/";  Filename: "{sys}\icacls.exe";  Parameters: """{app}\log"" /grant LocalService:F"; Flags: runascurrentuser runhidden
 Components: qdbd httpd;  StatusMsg: "Give access to db/";   Filename: "{sys}\icacls.exe";  Parameters: """{app}\db"" /grant LocalService:F";  Flags: runascurrentuser runhidden
 
-Components: qdbd;  StatusMsg: "Configure Server";     Filename: "{app}\bin\qdbd.exe";      Parameters: """--gen-config={app}\conf\qdbd.conf""      ""--log-directory={app}\log"" ""--root={app}\db""";            Check: not FileExists(ExpandConstant('{app}\conf\qdbd.conf'));      Flags: runascurrentuser runhidden
-Components: httpd; StatusMsg: "Configure Web Bridge"; Filename: "{app}\bin\qdb_httpd.exe"; Parameters: """--gen-config={app}\conf\qdb_httpd.conf"" ""--log-directory={app}\log"" ""--root={app}\share\qdb\www"""; Check: not FileExists(ExpandConstant('{app}\conf\qdb_httpd.conf')); Flags: runascurrentuser runhidden
+Components: qdbd;  StatusMsg: "Configure Server";     Filename: "cmd"; Parameters: "/c """"{app}\bin\qdbd.exe""      --gen-config ""--log-directory={app}\log"" ""--root={app}\db""            > ""{app}\conf\qdbd.conf""     """; Check: not FileExists(ExpandConstant('{app}\conf\qdbd.conf'));      Flags: runascurrentuser runhidden
+Components: httpd; StatusMsg: "Configure Web Bridge"; Filename: "cmd"; Parameters: "/c """"{app}\bin\qdb_httpd.exe"" --gen-config ""--log-directory={app}\log"" ""--root={app}\share\qdb\www"" > ""{app}\conf\qdb_httpd.conf"""""; Check: not FileExists(ExpandConstant('{app}\conf\qdb_httpd.conf')); Flags: runascurrentuser runhidden
 
 Components: qdbd;  StatusMsg: "Start Server";         Filename: "sc.exe"; Parameters: "start qdbd";      Flags: runhidden
 Components: httpd; StatusMsg: "Start Web Bridge";     Filename: "sc.exe"; Parameters: "start qdb_httpd"; Flags: runhidden
