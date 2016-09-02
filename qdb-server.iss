@@ -43,6 +43,7 @@ AppVersion={#QdbVersion}
 Compression=lzma
 DefaultDirName={pf}\quasardb
 DefaultGroupName=quasardb
+DisableDirPage=no
 LicenseFile=license.txt
 OutputBaseFilename={#QdbSetupBaseName}
 OutputDir=.
