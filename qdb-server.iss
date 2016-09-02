@@ -73,8 +73,8 @@ Name: api;   Description: "C API (qdb_api.dll)";    Types: full client;
 
 [Dirs]
 Components: qdbd httpd; Name: "{app}\conf"; Flags: uninsneveruninstall
-Components: qdbd httpd; Name: "{app}\log"; Flags: uninsneveruninstall
-Components: qdbd httpd; Name: "{app}\db"; Flags: uninsneveruninstall
+Components: qdbd httpd; Name: "{code:GetQdbDir|log}"; Flags: uninsneveruninstall
+Components: qdbd httpd; Name: "{code:GetQdbDir|db}"; Flags: uninsneveruninstall
 
 [Files]
 Components: api;   Source: "{#QdbOutputDir}\bin\qdb_api.dll";           DestDir: "{sys}";                Flags: ignoreversion;
@@ -94,11 +94,11 @@ Source: "{#SourcePath}\license.txt"; DestDir: "{app}\doc"
 Components: qdbd;  StatusMsg: "Install Server";       Filename: "{app}\bin\qdb_service.exe";      Parameters: "/install"; Flags: runascurrentuser runhidden
 Components: httpd; StatusMsg: "Install Web Bridge";   Filename: "{app}\bin\qdb_http_service.exe"; Parameters: "/install"; Flags: runascurrentuser runhidden
 
-Components: qdbd httpd;  StatusMsg: "Give access to log/";  Filename: "{sys}\icacls.exe";  Parameters: """{app}\log"" /grant LocalService:F"; Flags: runascurrentuser runhidden
-Components: qdbd httpd;  StatusMsg: "Give access to db/";   Filename: "{sys}\icacls.exe";  Parameters: """{app}\db"" /grant LocalService:F";  Flags: runascurrentuser runhidden
+Components: qdbd httpd;  StatusMsg: "Grant access to log directory";  Filename: "{sys}\icacls.exe";  Parameters: """{code:GetQdbDir|log}"" /grant LocalService:F"; Flags: runascurrentuser runhidden
+Components: qdbd;        StatusMsg: "Grant access to db directory";   Filename: "{sys}\icacls.exe";  Parameters: """{code:GetQdbDir|db}""  /grant LocalService:F";  Flags: runascurrentuser runhidden
 
-Components: qdbd;  StatusMsg: "Configure Server";     Filename: "cmd"; Parameters: "/c """"{app}\bin\qdbd.exe""      --gen-config ""--log-directory={app}\log"" ""--root={app}\db""            > ""{app}\conf\qdbd.conf""     """; Check: not FileExists(ExpandConstant('{app}\conf\qdbd.conf'));      Flags: runascurrentuser runhidden
-Components: httpd; StatusMsg: "Configure Web Bridge"; Filename: "cmd"; Parameters: "/c """"{app}\bin\qdb_httpd.exe"" --gen-config ""--log-directory={app}\log"" ""--root={app}\share\qdb\www"" > ""{app}\conf\qdb_httpd.conf"""""; Check: not FileExists(ExpandConstant('{app}\conf\qdb_httpd.conf')); Flags: runascurrentuser runhidden
+Components: qdbd;  StatusMsg: "Configure Server";     Filename: "cmd"; Parameters: "/c """"{app}\bin\qdbd.exe""      --gen-config ""--log-directory={code:GetQdbDir|log}"" ""--root={code:GetQdbDir|db}"" > ""{app}\conf\qdbd.conf""     """; Check: not FileExists(ExpandConstant('{app}\conf\qdbd.conf'));      Flags: runascurrentuser runhidden
+Components: httpd; StatusMsg: "Configure Web Bridge"; Filename: "cmd"; Parameters: "/c """"{app}\bin\qdb_httpd.exe"" --gen-config ""--log-directory={code:GetQdbDir|log}"" ""--root={app}\share\qdb\www"" > ""{app}\conf\qdb_httpd.conf"""""; Check: not FileExists(ExpandConstant('{app}\conf\qdb_httpd.conf')); Flags: runascurrentuser runhidden
 
 Components: qdbd;  StatusMsg: "Start Server";         Filename: "sc.exe"; Parameters: "start qdbd";      Flags: runhidden
 Components: httpd; StatusMsg: "Start Web Bridge";     Filename: "sc.exe"; Parameters: "start qdb_httpd"; Flags: runhidden
@@ -119,3 +119,54 @@ Components: utils;  Name: "{group}\quasardb shell"; Filename: "{app}\bin\qdbsh.e
 Name: "{group}\{cm:ProgramOnTheWeb,{#MyAppName}}"; Filename: "{#MyAppURL}"
 Name: "{group}\{cm:UninstallProgram,{#MyAppName}}"; Filename: "{uninstallexe}"
 
+[Code]
+var
+  QdbDirPage: TInputDirWizardPage;
+
+function GetQdbDir(Param: string): string;
+begin
+  Case Param of
+    'db':  Result := QdbDirPage.Values[0];
+    'log': Result := QdbDirPage.Values[1];
+  end
+end;
+
+procedure InitializeWizard;
+begin
+  QdbDirPage := CreateInputDirPage(wpSelectDir, 'Data directories', 'Where to store quasardb files?', 'Select the directories in which quasardb data will be stored, then click Next.', False, 'New Folder');
+  QdbDirPage.Add('Database files');
+  QdbDirPage.Add('Log files');
+end;
+
+procedure RegisterPreviousData(PreviousDataKey: Integer);
+begin
+  SetPreviousData(PreviousDataKey, 'DbDir', QdbDirPage.Values[0]);
+  SetPreviousData(PreviousDataKey, 'LogDir', QdbDirPage.Values[1]);
+end;
+
+function NextButtonClick(CurPageID: Integer): Boolean;
+begin
+  if CurPageID = wpSelectDir then
+  begin
+    QdbDirPage.Values[0] := GetPreviousData('DbDir', ExpandConstant('{app}/db'));
+    QdbDirPage.Values[1] := GetPreviousData('LogDir', ExpandConstant('{app}/log'));
+  end
+  Result := True;
+end;
+
+function UpdateReadyMemo(Space, NewLine, MemoUserInfoInfo, MemoDirInfo, MemoTypeInfo,
+  MemoComponentsInfo, MemoGroupInfo, MemoTasksInfo: String): String;
+var
+  S: String;
+begin
+  S := MemoDirInfo + NewLine + NewLine;
+
+  S := S + 'Database location' + NewLine;
+  S := S + Space + QdbDirPage.Values[0] + NewLine + NewLine;
+  S := S + 'Log files location' + NewLine;
+  S := S + Space + QdbDirPage.Values[1] + NewLine + NewLine;
+
+  S := S + MemoComponentsInfo + NewLine + NewLine;
+  S := S + MemoGroupInfo;
+  Result := S;
+end;
