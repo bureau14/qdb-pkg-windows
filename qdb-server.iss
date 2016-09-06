@@ -32,7 +32,7 @@
 ; Do not use the same AppId value in installers for other applications.
 ; (To generate a new GUID, click Tools | Generate GUID inside the IDE.)
 ;AppVerName={#MyAppName} {#QdbVersion}
-AppCopyright=Copyright (C) 2009-2015 quasardb SAS
+AppCopyright=Copyright (C) 2009-2016 quasardb SAS
 AppId={{20FBA2FC-C0A4-4080-AAF1-151F170BC532}
 AppName={#MyAppName}
 AppPublisher={#MyAppPublisher}
@@ -98,8 +98,11 @@ Components: httpd; StatusMsg: "Install Web Bridge";   Filename: "{app}\bin\qdb_h
 Components: qdbd httpd;  StatusMsg: "Grant access to log directory";  Filename: "{sys}\icacls.exe";  Parameters: """{code:GetQdbDir|log}"" /grant LocalService:F"; Flags: runascurrentuser runhidden
 Components: qdbd;        StatusMsg: "Grant access to db directory";   Filename: "{sys}\icacls.exe";  Parameters: """{code:GetQdbDir|db}""  /grant LocalService:F";  Flags: runascurrentuser runhidden
 
-Components: qdbd;  StatusMsg: "Configure Server";     Filename: "cmd"; Parameters: "/c """"{app}\bin\qdbd.exe""      --gen-config ""--log-directory={code:GetQdbDir|log}"" ""--root={code:GetQdbDir|db}"" > ""{app}\conf\qdbd.conf""     """; Check: not FileExists(ExpandConstant('{app}\conf\qdbd.conf'));      Flags: runascurrentuser runhidden
-Components: httpd; StatusMsg: "Configure Web Bridge"; Filename: "cmd"; Parameters: "/c """"{app}\bin\qdb_httpd.exe"" --gen-config ""--log-directory={code:GetQdbDir|log}"" ""--root={app}\share\qdb\www"" > ""{app}\conf\qdb_httpd.conf"""""; Check: not FileExists(ExpandConstant('{app}\conf\qdb_httpd.conf')); Flags: runascurrentuser runhidden
+Components: qdbd;  StatusMsg: "Update Server Configuration";     Filename: "cmd"; Parameters: "/c ""copy /Y ""{app}\conf\qdbd.conf""      ""{app}\conf\qdbd.conf.bak""      && ""{app}\bin\qdbd.exe""      -c ""{app}\conf\qdbd.conf.bak""      --gen-config ""--log-directory={code:GetQdbDir|log}"" ""--root={code:GetQdbDir|db}"" > ""{app}\conf\qdbd.conf""     """; Check: FileExists(ExpandConstant('{app}\conf\qdbd.conf'));      Flags: runascurrentuser runhidden
+Components: httpd; StatusMsg: "Update Web Bridge Configuration"; Filename: "cmd"; Parameters: "/c ""copy /Y ""{app}\conf\qdb_httpd.conf"" ""{app}\conf\qdb_httpd.conf.bak"" && ""{app}\bin\qdb_httpd.exe"" -c ""{app}\conf\qdb_httpd.conf.bak"" --gen-config ""--log-directory={code:GetQdbDir|log}"" ""--root={app}\share\qdb\www"" > ""{app}\conf\qdb_httpd.conf"""""; Check: FileExists(ExpandConstant('{app}\conf\qdb_httpd.conf')); Flags: runascurrentuser runhidden
+
+Components: qdbd;  StatusMsg: "Create Server Configuration";     Filename: "cmd"; Parameters: "/c """"{app}\bin\qdbd.exe""      --gen-config ""--log-directory={code:GetQdbDir|log}"" ""--root={code:GetQdbDir|db}"" > ""{app}\conf\qdbd.conf""     """; Check: not FileExists(ExpandConstant('{app}\conf\qdbd.conf'));      Flags: runascurrentuser runhidden
+Components: httpd; StatusMsg: "Create Web Bridge Configuration"; Filename: "cmd"; Parameters: "/c """"{app}\bin\qdb_httpd.exe"" --gen-config ""--log-directory={code:GetQdbDir|log}"" ""--root={app}\share\qdb\www"" > ""{app}\conf\qdb_httpd.conf"""""; Check: not FileExists(ExpandConstant('{app}\conf\qdb_httpd.conf')); Flags: runascurrentuser runhidden
 
 Components: qdbd;  StatusMsg: "Start Server";         Filename: "sc.exe"; Parameters: "start qdbd";      Flags: runhidden
 Components: httpd; StatusMsg: "Start Web Bridge";     Filename: "sc.exe"; Parameters: "start qdb_httpd"; Flags: runhidden
