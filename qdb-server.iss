@@ -47,7 +47,6 @@ DisableDirPage=no
 LicenseFile=license.txt
 OutputBaseFilename={#QdbSetupBaseName}
 OutputDir=.
-SignTool=Standard /a /du https://www.quasardb.net/ /d $qqdb qdbd installer$q $f"
 SolidCompression=yes
 WizardImageFile=WizardImage.bmp
 WizardSmallImageFile=WizardSmallImage.bmp
