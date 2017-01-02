@@ -38,21 +38,3 @@ iscc qdb-server.iss ^
 )
 
 @echo ##teamcity[blockClosed name='iscc']
-
-: STEP 3: sign  --------------------------------------------------------------
-
-
-@echo ##teamcity[blockOpened name='sign' description='Sign executable']
-
-@set DESCRIPTION="quasardb installer"
-@set URL=https://www.quasardb.net/
-@set THUMBPRINT=25B672BA5AD762CDD5F7EC58178D898CF74736C5
-
-signtool sign /v /a /sha1 %THUMBPRINT% /du %URL% /d %DESCRIPTION% %SETUP%.exe
-
-@if %ERRORLEVEL% NEQ 0 (
-    @echo ##teamcity[buildProblem description='Signing failed']
-    @exit /b 0
-)
-
-@echo ##teamcity[blockClosed name='sign']
