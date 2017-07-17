@@ -77,21 +77,26 @@ Components: qdbd httpd; Name: "{code:GetQdbDir|log}"; Flags: uninsneveruninstall
 Components: qdbd httpd; Name: "{code:GetQdbDir|db}"; Flags: uninsneveruninstall
 
 [Files]
-Components: api;   Source: "{#QdbOutputDir}\bin\qdb_api.dll";           DestDir: "{sys}";                Flags: ignoreversion;
-Components: qdbd;  Source: "{#QdbOutputDir}\bin\qdb_dbtool.exe";        DestDir: "{app}\bin";            Flags: ignoreversion;
-Components: qdbd;  Source: "{#QdbOutputDir}\bin\qdb_service.exe";       DestDir: "{app}\bin";            Flags: ignoreversion;
-Components: qdbd;  Source: "{#QdbOutputDir}\bin\qdbd.exe";              DestDir: "{app}\bin";            Flags: ignoreversion;
-Components: utils; Source: "{#QdbOutputDir}\bin\qdb_max_conn.exe";      DestDir: "{app}\bin";            Flags: ignoreversion;
-Components: utils; Source: "{#QdbOutputDir}\bin\qdbsh.exe";             DestDir: "{app}\bin";            Flags: ignoreversion;
-Components: httpd; Source: "{#QdbOutputDir}\bin\qdb_http_service.exe";  DestDir: "{app}\bin";            Flags: ignoreversion;
-Components: httpd; Source: "{#QdbOutputDir}\bin\qdb_httpd.exe";         DestDir: "{app}\bin";            Flags: ignoreversion;
-Components: httpd; Source: "{#QdbOutputDir}\share\qdb\www\*";           DestDir: "{app}\share\qdb\www";  Flags: recursesubdirs;
-
+Components: api;   Source: "{#QdbOutputDir}\bin\qdb_api.dll";            DestDir: "{sys}";                Flags: ignoreversion;
+Components: qdbd;  Source: "{#QdbOutputDir}\bin\qdb_dbtool.exe";         DestDir: "{app}\bin";            Flags: ignoreversion;
+Components: qdbd;  Source: "{#QdbOutputDir}\bin\qdb_service.exe";        DestDir: "{app}\bin";            Flags: ignoreversion;
+Components: qdbd;  Source: "{#QdbOutputDir}\bin\qdbd.exe";               DestDir: "{app}\bin";            Flags: ignoreversion;
+Components: qdbd;  Source: "{#QdbOutputDir}\bin\qdb_cluster_keygen.exe"; DestDir: "{app}\bin";            Flags: ignoreversion;
+Components: qdbd;  Source: "{#QdbOutputDir}\bin\qdb_user_add.exe";       DestDir: "{app}\bin";            Flags: ignoreversion;
+Components: utils; Source: "{#QdbOutputDir}\bin\qdb_max_conn.exe";       DestDir: "{app}\bin";            Flags: ignoreversion;
+Components: utils; Source: "{#QdbOutputDir}\bin\qdbsh.exe";              DestDir: "{app}\bin";            Flags: ignoreversion;
+Components: httpd; Source: "{#QdbOutputDir}\bin\qdb_http_service.exe";   DestDir: "{app}\bin";            Flags: ignoreversion;
+Components: httpd; Source: "{#QdbOutputDir}\bin\qdb_httpd.exe";          DestDir: "{app}\bin";            Flags: ignoreversion;
+Components: httpd; Source: "{#QdbOutputDir}\share\qdb\www\*";            DestDir: "{app}\share\qdb\www";  Flags: recursesubdirs;
 
 Source: "{#SourcePath}\readme.txt";  DestDir: "{app}\doc"
 Source: "{#SourcePath}\license.txt"; DestDir: "{app}\doc"
 
 [Run]
+Components: qdbd; StatusMsg: "Generating cluster key";        Filename: "{app}\bin\qdb_cluster_keygen.exe"; Parameters: """-p {app}\share\qdb\cluster_public.key""" """-s {app}\conf\cluster_private.key"""; Description: : "generating cluster keys"; Flags: runascurrentuser runhidden
+Components: utils; StatusMsg: "Adding shell user";        Filename: "{app}\bin\qdb_user_add.exe"; Parameters: """ -u qdbsh """"""-p {app}\conf\users.conf""" """-s {app}\conf\qdbsh_private.key"""; Description: : "adding shell user"; Flags: runascurrentuser runhidden
+Components: httpd; StatusMsg: "Adding web bridge user";        Filename: "{app}\bin\qdb_user_add.exe"; Parameters: """ -u qdb_httpd """"""-p {app}\conf\users.conf""" """-s {app}\conf\qdb_httpd_private.key"""; Description: : "adding web bridge user"; Flags: runascurrentuser runhidden
+
 Components: qdbd;  StatusMsg: "Install Server";       Filename: "{app}\bin\qdb_service.exe";      Parameters: "/install"; Flags: runascurrentuser runhidden
 Components: httpd; StatusMsg: "Install Web Bridge";   Filename: "{app}\bin\qdb_http_service.exe"; Parameters: "/install"; Flags: runascurrentuser runhidden
 
@@ -104,8 +109,8 @@ Components: qdbd;  StatusMsg: "Install license";      Filename: "cmd"; Parameter
 Components: qdbd;  StatusMsg: "Update Server Configuration";     Filename: "cmd"; Parameters: "/c ""copy /Y ""{app}\conf\qdbd.conf""      ""{app}\conf\qdbd.conf.bak""      && ""{app}\bin\qdbd.exe""      -c ""{app}\conf\qdbd.conf.bak""      --gen-config ""--log-directory={code:GetQdbDir|log}"" ""--root={code:GetQdbDir|db}"" ""--license-file={code:GetQdbLicenseFileToSet}"" > ""{app}\conf\qdbd.conf""     """; Check: FileExists(ExpandConstant('{app}\conf\qdbd.conf'));      Flags: runascurrentuser runhidden
 Components: httpd; StatusMsg: "Update Web Bridge Configuration"; Filename: "cmd"; Parameters: "/c ""copy /Y ""{app}\conf\qdb_httpd.conf"" ""{app}\conf\qdb_httpd.conf.bak"" && ""{app}\bin\qdb_httpd.exe"" -c ""{app}\conf\qdb_httpd.conf.bak"" --gen-config ""--log-directory={code:GetQdbDir|log}"" ""--root={app}\share\qdb\www"" > ""{app}\conf\qdb_httpd.conf"""""; Check: FileExists(ExpandConstant('{app}\conf\qdb_httpd.conf')); Flags: runascurrentuser runhidden
 
-Components: qdbd;  StatusMsg: "Create Server Configuration";     Filename: "cmd"; Parameters: "/c """"{app}\bin\qdbd.exe""      --gen-config ""--log-directory={code:GetQdbDir|log}"" ""--root={code:GetQdbDir|db}"" ""--license-file={code:GetQdbLicenseFileToSet}"" > ""{app}\conf\qdbd.conf""     """; Check: not FileExists(ExpandConstant('{app}\conf\qdbd.conf'));      Flags: runascurrentuser runhidden
-Components: httpd; StatusMsg: "Create Web Bridge Configuration"; Filename: "cmd"; Parameters: "/c """"{app}\bin\qdb_httpd.exe"" --gen-config ""--log-directory={code:GetQdbDir|log}"" ""--root={app}\share\qdb\www"" > ""{app}\conf\qdb_httpd.conf"""""; Check: not FileExists(ExpandConstant('{app}\conf\qdb_httpd.conf')); Flags: runascurrentuser runhidden
+Components: qdbd;  StatusMsg: "Create Server Configuration";     Filename: "cmd"; Parameters: "/c """"{app}\bin\qdbd.exe""      --gen-config --security=true ""--cluster-private-file={app}\conf\cluster_private.key"" ""--user-list={app}\conf\users.conf"" ""--log-directory={code:GetQdbDir|log}"" ""--root={code:GetQdbDir|db}"" ""--license-file={code:GetQdbLicenseFileToSet}"" > ""{app}\conf\qdbd.conf""     """; Check: not FileExists(ExpandConstant('{app}\conf\qdbd.conf'));      Flags: runascurrentuser runhidden
+Components: httpd; StatusMsg: "Create Web Bridge Configuration"; Filename: "cmd"; Parameters: "/c """"{app}\bin\qdb_httpd.exe"" --gen-config ""--cluster-public-key-file={app}\share\qdb\cluster_public.key"" ""--user-credentials-file={app}\conf\qdb_httpd_private.key"" ""--log-directory={code:GetQdbDir|log}"" ""--root={app}\share\qdb\www"" > ""{app}\conf\qdb_httpd.conf"""""; Check: not FileExists(ExpandConstant('{app}\conf\qdb_httpd.conf')); Flags: runascurrentuser runhidden
 
 Components: qdbd;  StatusMsg: "Start Server";         Filename: "sc.exe"; Parameters: "start qdbd";      Flags: runhidden
 Components: httpd; StatusMsg: "Start Web Bridge";     Filename: "sc.exe"; Parameters: "start qdb_httpd"; Flags: runhidden
