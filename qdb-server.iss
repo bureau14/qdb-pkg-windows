@@ -93,15 +93,19 @@ Source: "{#SourcePath}\readme.txt";  DestDir: "{app}\doc"
 Source: "{#SourcePath}\license.txt"; DestDir: "{app}\doc"
 
 [Run]
-Components: qdbd; StatusMsg: "Generating cluster key";        Filename: "{app}\bin\qdb_cluster_keygen.exe"; Parameters: """-p {app}\share\qdb\cluster_public.key""" """-s {app}\conf\cluster_private.key"""; Description: : "generating cluster keys"; Flags: runascurrentuser runhidden
-Components: utils; StatusMsg: "Adding shell user";        Filename: "{app}\bin\qdb_user_add.exe"; Parameters: """ -u qdbsh """"""-p {app}\conf\users.conf""" """-s {app}\conf\qdbsh_private.key"""; Description: : "adding shell user"; Flags: runascurrentuser runhidden
-Components: httpd; StatusMsg: "Adding web bridge user";        Filename: "{app}\bin\qdb_user_add.exe"; Parameters: """ -u qdb_httpd """"""-p {app}\conf\users.conf""" """-s {app}\conf\qdb_httpd_private.key"""; Description: : "adding web bridge user"; Flags: runascurrentuser runhidden
+Components: qdbd;  StatusMsg: "Generating cluster key";   Filename: "{app}\bin\qdb_cluster_keygen.exe"; Parameters: "-p              ""{app}\share\qdb\cluster_public.key"" -s ""{app}\conf\cluster_private.key""";      Flags: runascurrentuser runhidden
+Components: utils; StatusMsg: "Adding shell user";        Filename: "{app}\bin\qdb_user_add.exe";       Parameters: "-u qdbsh -p     ""{app}\conf\users.conf""              -s ""{app}\conf\qdbsh_private.key""";         Flags: runascurrentuser runhidden
+Components: httpd; StatusMsg: "Adding web bridge user";   Filename: "{app}\bin\qdb_user_add.exe";       Parameters: "-u qdb_httpd -p ""{app}\conf\users.conf""              -s ""{app}\conf\qdb_httpd_private.key"""; Flags: runascurrentuser runhidden
 
 Components: qdbd;  StatusMsg: "Install Server";       Filename: "{app}\bin\qdb_service.exe";      Parameters: "/install"; Flags: runascurrentuser runhidden
 Components: httpd; StatusMsg: "Install Web Bridge";   Filename: "{app}\bin\qdb_http_service.exe"; Parameters: "/install"; Flags: runascurrentuser runhidden
 
-Components: qdbd httpd;  StatusMsg: "Grant access to log directory";  Filename: "{sys}\icacls.exe";  Parameters: """{code:GetQdbDir|log}"" /grant LocalService:F"; Flags: runascurrentuser runhidden
-Components: qdbd;        StatusMsg: "Grant access to db directory";   Filename: "{sys}\icacls.exe";  Parameters: """{code:GetQdbDir|db}""  /grant LocalService:F";  Flags: runascurrentuser runhidden
+Components: qdbd httpd;  StatusMsg: "Grant access to conf directory"; Filename: "{sys}\icacls.exe";  Parameters: """{app}\conf"" /grant:r LocalService:(OI)(CI)RX";     Flags: runascurrentuser runhidden
+Components: qdbd httpd;  StatusMsg: "Grant access to conf directory"; Filename: "{sys}\icacls.exe";  Parameters: """{app}\conf"" /grant:r Administrators:(OI)(CI)F";   Flags: runascurrentuser runhidden
+Components: qdbd httpd;  StatusMsg: "Secure conf directory";          Filename: "{sys}\icacls.exe";  Parameters: """{app}\conf"" /inheritance:r";            Flags: runascurrentuser runhidden
+
+Components: qdbd httpd;  StatusMsg: "Grant access to log directory";  Filename: "{sys}\icacls.exe";  Parameters: """{code:GetQdbDir|log}"" /grant:r LocalService:(OI)(CI)F";      Flags: runascurrentuser runhidden
+Components: qdbd;        StatusMsg: "Grant access to db directory";   Filename: "{sys}\icacls.exe";  Parameters: """{code:GetQdbDir|db}""  /grant:r LocalService:(OI)(CI)F";      Flags: runascurrentuser runhidden
 
 Components: qdbd;  StatusMsg: "Backup license";       Filename: "cmd"; Parameters: "/c ""move /Y ""{code:GetQdbLicenseFileDestination}"" ""{code:GetQdbLicenseFileDestination}.bak"" """; Check: ShouldCopyNewLicense();      Flags: runascurrentuser runhidden
 Components: qdbd;  StatusMsg: "Install license";      Filename: "cmd"; Parameters: "/c ""copy /Y ""{code:GetQdbLicenseFileSource}""      ""{code:GetQdbLicenseFileDestination}""     """; Check: ShouldCopyNewLicense();      Flags: runascurrentuser runhidden
@@ -186,7 +190,7 @@ begin
   SetPreviousData(PreviousDataKey, 'LicenseFile', GetQdbLicenseFileDestination(''));
 end;
 
-function NextButtonClick(CurPageID: Integer): Boolean;
+function NextButtonClick(CurPageID: Integer): boolean;
 begin
   if CurPageID = wpSelectDir then
   begin
@@ -198,9 +202,9 @@ begin
 end;
 
 function UpdateReadyMemo(Space, NewLine, MemoUserInfoInfo, MemoDirInfo, MemoTypeInfo,
-  MemoComponentsInfo, MemoGroupInfo, MemoTasksInfo: String): String;
+  MemoComponentsInfo, MemoGroupInfo, MemoTasksInfo: string): string;
 var
-  S: String;
+  S: string;
 begin
   S := MemoDirInfo + NewLine + NewLine;
 
