@@ -44,7 +44,7 @@ Compression=lzma
 DefaultDirName={pf}\quasardb
 DefaultGroupName=quasardb
 DisableDirPage=no
-LicenseFile=license.txt
+LicenseFile={#QdbOutputDir}\share\doc\qdb\LICENSE.txt
 OutputBaseFilename={#QdbSetupBaseName}
 OutputDir=.
 SolidCompression=yes
@@ -89,7 +89,7 @@ Components: utils; Source: "{#QdbOutputDir}\bin\qdbsh.exe";              DestDir
 Components: httpd; Source: "{#QdbOutputDir}\bin\qdb_http_service.exe";   DestDir: "{app}\bin";            Flags: ignoreversion;
 Components: httpd; Source: "{#QdbOutputDir}\bin\qdb_httpd.exe";          DestDir: "{app}\bin";            Flags: ignoreversion;
 Components: httpd; Source: "{#QdbOutputDir}\share\qdb\www\*";            DestDir: "{app}\share\qdb\www";  Flags: recursesubdirs;
-Components: doc;   Source: "{#QdbOutputDir}\share\qdb\doc\*";            DestDir: "{app}\doc";            Flags: recursesubdirs;
+Components: doc;   Source: "{#QdbOutputDir}\share\doc\qdb\*";            DestDir: "{app}\doc";            Flags: recursesubdirs;
 
 [Run]
 Components: qdbd;  StatusMsg: "Generating cluster key";   Filename: "{app}\bin\qdb_cluster_keygen.exe"; Parameters: "-p              ""{app}\share\qdb\cluster_public.key"" -s ""{app}\conf\cluster_private.key""";      Flags: runascurrentuser runhidden
