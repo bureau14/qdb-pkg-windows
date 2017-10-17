@@ -17,7 +17,7 @@
 
 @rmdir /S /Q qdb
 @for %%x in (%*) do (
-    7z x -oqdb "%%~fx"
+    7z x -oqdb -y "%%~fx"
 )
 
 @echo ##teamcity[blockClosed name='unzip']

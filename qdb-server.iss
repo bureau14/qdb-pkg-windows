@@ -70,6 +70,7 @@ Name: qdbd;  Description: "Server (qdbd)";          Types: full server;
 Name: httpd; Description: "Web Bridge (qdb_httpd)"; Types: full server;
 Name: utils; Description: "Utilities (qdbsh...)";   Types: full client;
 Name: api;   Description: "C API (qdb_api.dll)";    Types: full client;
+Name: doc;   Description: "Documentation";          Types: full server client;
 
 [Dirs]
 Components: qdbd httpd; Name: "{app}\conf"; Flags: uninsneveruninstall
@@ -88,9 +89,7 @@ Components: utils; Source: "{#QdbOutputDir}\bin\qdbsh.exe";              DestDir
 Components: httpd; Source: "{#QdbOutputDir}\bin\qdb_http_service.exe";   DestDir: "{app}\bin";            Flags: ignoreversion;
 Components: httpd; Source: "{#QdbOutputDir}\bin\qdb_httpd.exe";          DestDir: "{app}\bin";            Flags: ignoreversion;
 Components: httpd; Source: "{#QdbOutputDir}\share\qdb\www\*";            DestDir: "{app}\share\qdb\www";  Flags: recursesubdirs;
-
-Source: "{#SourcePath}\readme.txt";  DestDir: "{app}\doc"
-Source: "{#SourcePath}\license.txt"; DestDir: "{app}\doc"
+Components: doc;   Source: "{#QdbOutputDir}\share\qdb\doc\*";            DestDir: "{app}\doc";            Flags: recursesubdirs;
 
 [Run]
 Components: qdbd;  StatusMsg: "Generating cluster key";   Filename: "{app}\bin\qdb_cluster_keygen.exe"; Parameters: "-p              ""{app}\share\qdb\cluster_public.key"" -s ""{app}\conf\cluster_private.key""";      Flags: runascurrentuser runhidden
