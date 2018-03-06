@@ -86,6 +86,7 @@ Components: qdbd;  Source: "{#QdbOutputDir}\bin\qdb_cluster_keygen.exe"; DestDir
 Components: qdbd;  Source: "{#QdbOutputDir}\bin\qdb_user_add.exe";       DestDir: "{app}\bin";            Flags: ignoreversion;
 Components: utils; Source: "{#QdbOutputDir}\bin\qdb_max_conn.exe";       DestDir: "{app}\bin";            Flags: ignoreversion;
 Components: utils; Source: "{#QdbOutputDir}\bin\qdbsh.exe";              DestDir: "{app}\bin";            Flags: ignoreversion;
+Components: utils; Source: "{#QdbOutputDir}\bin\qdb-benchmark.exe";      DestDir: "{app}\bin";            Flags: ignoreversion;
 Components: httpd; Source: "{#QdbOutputDir}\bin\qdb_http_service.exe";   DestDir: "{app}\bin";            Flags: ignoreversion;
 Components: httpd; Source: "{#QdbOutputDir}\bin\qdb_httpd.exe";          DestDir: "{app}\bin";            Flags: ignoreversion;
 Components: httpd; Source: "{#QdbOutputDir}\share\qdb\www\*";            DestDir: "{app}\share\qdb\www";  Flags: recursesubdirs;
