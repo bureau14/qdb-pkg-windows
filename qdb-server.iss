@@ -1,13 +1,13 @@
 #ifndef QdbIs64bit
-#define QdbIs64bit 1
+#error "QdbIs64bit should be defined"
 #endif
 
 #ifndef QdbVersion
-#define QdbVersion "0.0.0"
+#error "QdbVersion should be defined"
 #endif
 
 #ifndef QdbSetupBaseName
-#if QdbIs64bit
+#if QdbIs64bit == "1"
 #define QdbSetupBaseName "qdb-windows-64bit-setup"
 #else
 #define QdbSetupBaseName "qdb-windows-32bit-setup"
@@ -18,7 +18,7 @@
 #define QdbOutputDir "qdb"
 #endif
 
-#if QdbIs64bit
+#if QdbIs64bit == "1"
 #define MyAppName "quasardb 64-bit"
 #else
 #define MyAppName "quasardb 32-bit"
@@ -51,7 +51,7 @@ SolidCompression=yes
 WizardImageFile=WizardImage.bmp
 WizardSmallImageFile=WizardSmallImage.bmp
 
-#if QdbIs64bit
+#if QdbIs64bit == "1"
 ArchitecturesInstallIn64BitMode=x64
 ArchitecturesAllowed=x64
 #endif
@@ -197,7 +197,8 @@ begin
     QdbLicensePage.Values[0] := GetPreviousData('LicenseFile', '');
     QdbDirPage.Values[0] := GetPreviousData('DbDir', ExpandConstant('{app}\db'));
     QdbDirPage.Values[1] := GetPreviousData('LogDir', ExpandConstant('{app}\log'));
-  end
+  end;
+
   Result := True;
 end;
 
@@ -216,7 +217,7 @@ begin
   else
   begin
     S := S + Space + QdbLicensePage.Values[0] + NewLine + NewLine;
-  end
+  end;
 
   S := S + 'Database location' + NewLine;
   S := S + Space + QdbDirPage.Values[0] + NewLine + NewLine;

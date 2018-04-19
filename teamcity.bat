@@ -1,6 +1,7 @@
 @setlocal enabledelayedexpansion
 
 @for /f "tokens=2 delims=-" %%i  in ('dir /b %1') do @set VERSION=%%i
+@echo VERSION=%VERSION%
 
 @echo %~n1 | @findstr 64bit
 @if %ERRORLEVEL%==0 (
