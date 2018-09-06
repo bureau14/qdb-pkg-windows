@@ -27,11 +27,19 @@
 
 @echo ##teamcity[blockOpened name='iscc' description='Inno Setup']
 
-iscc qdb-server.iss ^
+@if %IS64BIT%==1 (
+iscc qdb-server-64.iss ^
     /dQdbSetupBaseName=%SETUP% ^
     /dQdbVersion=%VERSION% ^
     /dQdbIs64bit=%IS64BIT% ^
     /dQdbOutputDir=qdb
+) else (
+iscc qdb-server-32.iss ^
+    /dQdbSetupBaseName=%SETUP% ^
+    /dQdbVersion=%VERSION% ^
+    /dQdbIs64bit=%IS64BIT% ^
+    /dQdbOutputDir=qdb
+)
 
 @if %ERRORLEVEL% NEQ 0 (
     @echo ##teamcity[buildProblem description='Compilation failed']

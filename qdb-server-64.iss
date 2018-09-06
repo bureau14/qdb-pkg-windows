@@ -7,11 +7,7 @@
 #endif
 
 #ifndef QdbSetupBaseName
-#if QdbIs64bit == "1"
 #define QdbSetupBaseName "qdb-windows-64bit-setup"
-#else
-#define QdbSetupBaseName "qdb-windows-32bit-setup"
-#endif
 #endif
 
 #ifndef QdbOutputDir
