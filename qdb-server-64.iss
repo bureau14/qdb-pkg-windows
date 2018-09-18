@@ -62,11 +62,12 @@ Name: client; Description: "Client installation"
 Name: custom; Description: "Custom installation"; Flags: iscustom
 
 [Components]
-Name: qdbd;     Description: "Server (qdbd)";           Types: full server;
-Name: utils;    Description: "Utilities (qdbsh...)";    Types: full client;
-Name: api;      Description: "C API (qdb_api.dll)";     Types: full client;
-Name: doc;      Description: "Documentation";           Types: full server client;
-Name: api_rest; Description: "API REST (qdb_rest)";     Types: full server;
+Name: qdbd;      Description: "Server (qdbd)";           Types: full server;
+Name: utils;     Description: "Utilities (qdbsh...)";    Types: full client;
+Name: api;       Description: "C API (qdb_api.dll)";     Types: full client;
+Name: doc;       Description: "Documentation";           Types: full server client;
+Name: api_rest;  Description: "API REST (qdb_rest)";     Types: full server;
+Name: dashboard; Description: "Dashboard";               Types: full server;
 
 [Dirs]
 Components: qdbd api_rest;  Name: "{app}\conf"; Flags: uninsneveruninstall
@@ -74,24 +75,27 @@ Components: qdbd api_rest;  Name: "{code:GetQdbDir|log}"; Flags: uninsneverunins
 Components: qdbd;           Name: "{code:GetQdbDir|db}"; Flags: uninsneveruninstall
 
 [Files]
-Components: api;      Source: "{#QdbOutputDir}\bin\qdb_api.dll";              DestDir: "{sys}";                         Flags: ignoreversion;
-Components: qdbd;     Source: "{#QdbOutputDir}\bin\qdb_dbtool.exe";           DestDir: "{app}\bin";                     Flags: ignoreversion;
-Components: qdbd;     Source: "{#QdbOutputDir}\bin\qdb_service.exe";          DestDir: "{app}\bin";                     Flags: ignoreversion;
-Components: qdbd;     Source: "{#QdbOutputDir}\bin\qdbd.exe";                 DestDir: "{app}\bin";                     Flags: ignoreversion;
-Components: qdbd;     Source: "{#QdbOutputDir}\bin\qdb_cluster_keygen.exe";   DestDir: "{app}\bin";                     Flags: ignoreversion;
-Components: qdbd;     Source: "{#QdbOutputDir}\bin\qdb_user_add.exe";         DestDir: "{app}\bin";                     Flags: ignoreversion;
-Components: utils;    Source: "{#QdbOutputDir}\bin\qdb_max_conn.exe";         DestDir: "{app}\bin";                     Flags: ignoreversion;
-Components: utils;    Source: "{#QdbOutputDir}\bin\qdbsh.exe";                DestDir: "{app}\bin";                     Flags: ignoreversion;
-Components: utils;    Source: "{#QdbOutputDir}\bin\qdb-benchmark.exe";        DestDir: "{app}\bin";                     Flags: ignoreversion;
-Components: utils;    Source: "{#QdbOutputDir}\bin\qdb-railgun.exe";          DestDir: "{app}\bin";                     Flags: ignoreversion;
-Components: doc;      Source: "{#QdbOutputDir}\share\doc\qdb\*";              DestDir: "{app}\doc";                     Flags: recursesubdirs;
-Components: api_rest; Source: "{#QdbOutputDir}\bin\qdb_rest.exe";             DestDir: "{app}\bin";                     Flags: ignoreversion;
-Components: api_rest; Source: "{#QdbOutputDir}\bin\qdb_rest_service.exe";     DestDir: "{app}\bin";                     Flags: ignoreversion;
-Components: api_rest; Source: "{#QdbOutputDir}\bin\openssl.exe";              DestDir: "{app}\bin";                     Flags: deleteafterinstall;
-Components: api_rest; Source: "{#QdbOutputDir}\bin\libeay32.dll";             DestDir: "{app}\bin";                     Flags: deleteafterinstall;
-Components: api_rest; Source: "{#QdbOutputDir}\bin\ssleay32.dll";             DestDir: "{app}\bin";                     Flags: deleteafterinstall;
-Components: api_rest; Source: "{#QdbOutputDir}\etc\openssl.conf";             DestDir: "{app}";                         Flags: deleteafterinstall;
-Components: api_rest; Source: "{#QdbOutputDir}\etc\qdb_rest.conf.sample";     DestDir: "{app}\conf";                    Flags: recursesubdirs;      AfterInstall: ConfigureDefault(ExpandConstant('{app}\conf\qdb_rest.conf.sample'))
+Components: api;       Source: "{#QdbOutputDir}\bin\qdb_api.dll";              DestDir: "{sys}";                         Flags: ignoreversion;
+Components: qdbd;      Source: "{#QdbOutputDir}\bin\qdb_dbtool.exe";           DestDir: "{app}\bin";                     Flags: ignoreversion;
+Components: qdbd;      Source: "{#QdbOutputDir}\bin\qdb_service.exe";          DestDir: "{app}\bin";                     Flags: ignoreversion;
+Components: qdbd;      Source: "{#QdbOutputDir}\bin\qdbd.exe";                 DestDir: "{app}\bin";                     Flags: ignoreversion;
+Components: qdbd;      Source: "{#QdbOutputDir}\bin\qdb_cluster_keygen.exe";   DestDir: "{app}\bin";                     Flags: ignoreversion;
+Components: qdbd;      Source: "{#QdbOutputDir}\bin\qdb_user_add.exe";         DestDir: "{app}\bin";                     Flags: ignoreversion;
+Components: utils;     Source: "{#QdbOutputDir}\bin\qdb_max_conn.exe";         DestDir: "{app}\bin";                     Flags: ignoreversion;
+Components: utils;     Source: "{#QdbOutputDir}\bin\qdbsh.exe";                DestDir: "{app}\bin";                     Flags: ignoreversion;
+Components: utils;     Source: "{#QdbOutputDir}\bin\qdb-benchmark.exe";        DestDir: "{app}\bin";                     Flags: ignoreversion;
+Components: utils;     Source: "{#QdbOutputDir}\bin\qdb-railgun.exe";          DestDir: "{app}\bin";                     Flags: ignoreversion;
+Components: doc;       Source: "{#QdbOutputDir}\share\doc\qdb\*";              DestDir: "{app}\doc";                     Flags: recursesubdirs;
+Components: api_rest;  Source: "{#QdbOutputDir}\bin\qdb_rest.exe";             DestDir: "{app}\bin";                     Flags: ignoreversion;
+Components: api_rest;  Source: "{#QdbOutputDir}\bin\qdb_rest_service.exe";     DestDir: "{app}\bin";                     Flags: ignoreversion;
+Components: api_rest;  Source: "{#QdbOutputDir}\bin\openssl.exe";              DestDir: "{app}\bin";                     Flags: deleteafterinstall;
+Components: api_rest;  Source: "{#QdbOutputDir}\bin\libeay32.dll";             DestDir: "{app}\bin";                     Flags: deleteafterinstall;
+Components: api_rest;  Source: "{#QdbOutputDir}\bin\ssleay32.dll";             DestDir: "{app}\bin";                     Flags: deleteafterinstall;
+Components: api_rest;  Source: "{#QdbOutputDir}\etc\openssl.conf";             DestDir: "{app}";                         Flags: deleteafterinstall;
+Components: dashboard; Source: "{#QdbOutputDir}\assets\*";                     DestDir: "{app}\assets";                  Flags: recursesubdirs;
+
+Components: api_rest;  Source: "{#QdbOutputDir}\etc\qdb_rest.conf.sample"; DestDir: "{app}\conf";                             Flags: recursesubdirs; AfterInstall: ConfigureDefault(ExpandConstant('{app}\conf\qdb_rest.conf.sample'))
+Components: api_rest;  Source: "{#QdbOutputDir}\etc\qdb_rest.conf.sample"; DestDir: "{app}\conf"; DestName: qdb_rest.conf;    Flags: recursesubdirs; AfterInstall: ConfigureDefault(ExpandConstant('{app}\conf\qdb_rest.conf'));  Check: not FileExists(ExpandConstant('{app}\conf\qdb_rest.conf'))
 
 
 [Run]
@@ -115,7 +119,6 @@ Components: qdbd;     StatusMsg:  "Update Server Configuration";            File
 Components: api_rest; StatusMsg:  "Update API REST Configuration";          Filename: "cmd"; Parameters: "/c ""copy /Y ""{app}\{app}\conf\qdb_rest.conf"" ""{app}\conf\qdb_rest.conf.bak"" && ""copy /Y ""{app}\conf\qdb_rest.conf.sample"" ""{app}\conf\qdb_rest.conf"" """;  Check: FileExists(ExpandConstant('{app}\conf\qdb_rest.conf'));          Flags: runascurrentuser runhidden 
 
 Components: qdbd;     StatusMsg: "Create Server Configuration";           Filename: "cmd"; Parameters: "/c """"{app}\bin\qdbd.exe""      --gen-config --security=true ""--cluster-private-file={app}\conf\cluster_private.key"" ""--user-list={app}\conf\users.conf"" ""--log-directory={code:GetQdbDir|log}"" ""--root={code:GetQdbDir|db}"" ""--license-file={code:GetQdbLicenseFileToSet}"" > ""{app}\conf\qdbd.conf""     """; Check: not FileExists(ExpandConstant('{app}\conf\qdbd.conf'));      Flags: runascurrentuser runhidden
-Components: api_rest; StatusMsg: "Create API REST Configuration";         Filename: "cmd"; Parameters: "/c ""copy /Y ""{app}\conf\qdb_rest.conf.sample"" ""{app}\conf\qdb_rest.conf"""""; Check: not FileExists(ExpandConstant('{app}\conf\qdb_rest.conf')); Flags: runascurrentuser runhidden
 Components: api_rest; StatusMsg: "Create API REST Certificate";           Filename: "cmd"; Parameters: "/c """"{app}\bin\openssl.exe"" req -config ""{app}\openssl.conf"" -newkey rsa:4096 -nodes -sha512 -x509 -days 3650 -nodes -out ""{app}\conf\qdb_rest.cert.pem"" -keyout ""{app}\conf\qdb_rest.key.pem"" -subj /C=FR/L=Paris/O=Quasardb/CN=Quasardb """; Check: not FileExists(ExpandConstant('{app}\conf\api-rest.cert.pem')); Flags: runascurrentuser runhidden
 
 
@@ -232,7 +235,7 @@ begin
   Result := S;
 end;
 
-function ReplaceValue(const FileName, TagName, TagValue: string): Boolean;
+function ReplaceValue(const FileName, TagName, TagValue, Comma: string): Boolean;
 var
   I: Integer;
   Tag: string;
@@ -254,7 +257,7 @@ begin
       begin
         Result := True;
         Delete(Line, 0, MaxInt);
-        Line := '"' + TagName + '": "' + TagValue + '",';
+        Line := '"' + TagName + '": "' + TagValue + '"' + Comma;
         FileLines[I] := Line;
         FileLines.SaveToFile(FileName);
         Break;
@@ -267,8 +270,9 @@ end;
 
 procedure ConfigureDefault(FileName: String);
 begin
-  ReplaceValue(FileName, 'cluster_public_key_file', ExpandConstant('{app}\share\qdb\cluster_public.key'))
-  ReplaceValue(FileName, 'tls_certificate', ExpandConstant('{app}\conf\qdb_rest.cert.pem'))
-  ReplaceValue(FileName, 'tls_key', ExpandConstant('{app}\conf\qdb_rest.key.pem'))
-  ReplaceValue(FileName, 'log', GetQdbDir('log') + '\qdb_rest.log')
+  ReplaceValue(FileName, 'cluster_public_key_file', ExpandConstant('{app}\share\qdb\cluster_public.key'), ',')
+  ReplaceValue(FileName, 'tls_certificate', ExpandConstant('{app}\conf\qdb_rest.cert.pem'), ',')
+  ReplaceValue(FileName, 'tls_key', ExpandConstant('{app}\conf\qdb_rest.key.pem'), ',')
+  ReplaceValue(FileName, 'log', GetQdbDir('log') + '\qdb_rest.log', ',')
+  ReplaceValue(FileName, 'assets', ExpandConstant('{app}\assets'), ' ')
 end;
