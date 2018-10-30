@@ -70,6 +70,7 @@ Name: api_rest;  Description: "API REST (qdb_rest)";     Types: full server;
 Name: dashboard; Description: "Dashboard";               Types: full server;
 
 [Dirs]
+Components: qdbd api_rest;  Name: "{app}\share\qdb"; Flags: uninsneveruninstall
 Components: qdbd api_rest;  Name: "{app}\conf"; Flags: uninsneveruninstall
 Components: qdbd api_rest;  Name: "{code:GetQdbDir|log}"; Flags: uninsneveruninstall
 Components: qdbd;           Name: "{code:GetQdbDir|db}"; Flags: uninsneveruninstall

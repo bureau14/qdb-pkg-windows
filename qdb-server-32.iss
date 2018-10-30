@@ -68,6 +68,7 @@ Name: api;      Description: "C API (qdb_api.dll)";     Types: full client;
 Name: doc;      Description: "Documentation";           Types: full server client;
 
 [Dirs]
+Components: qdbd ;  Name: "{app}\share\qdb"; Flags: uninsneveruninstall
 Components: qdbd ;  Name: "{app}\conf"; Flags: uninsneveruninstall
 Components: qdbd ;  Name: "{code:GetQdbDir|log}"; Flags: uninsneveruninstall
 Components: qdbd;   Name: "{code:GetQdbDir|db}"; Flags: uninsneveruninstall
