@@ -66,7 +66,7 @@ Name: qdbd;      Description: "Server (qdbd)";           Types: full server;
 Name: utils;     Description: "Utilities (qdbsh...)";    Types: full client;
 Name: api;       Description: "C API (qdb_api.dll)";     Types: full client;
 Name: doc;       Description: "Documentation";           Types: full server client;
-Name: api_rest;  Description: "API REST (qdb_rest)";     Types: full server;
+Name: api_rest;  Description: "REST API (qdb_rest)";     Types: full server;
 Name: dashboard; Description: "Dashboard";               Types: full server;
 
 [Dirs]
@@ -104,7 +104,7 @@ Components: qdbd;  StatusMsg: "Generating cluster key";   Filename: "{app}\bin\q
 Components: utils; StatusMsg: "Adding shell user";        Filename: "{app}\bin\qdb_user_add.exe";       Parameters: "-u qdbsh -p     ""{app}\conf\users.conf""              -s ""{app}\conf\qdbsh_private.key""";         Flags: runascurrentuser runhidden
 
 Components: qdbd;     StatusMsg: "Install Server";       Filename: "{app}\bin\qdb_service.exe";          Parameters: "/install"; Flags: runascurrentuser runhidden
-Components: api_rest; StatusMsg: "Install API REST";     Filename: "{app}\bin\qdb_rest_service.exe";     Parameters: "/install"; Flags: runascurrentuser runhidden
+Components: api_rest; StatusMsg: "Install REST API";     Filename: "{app}\bin\qdb_rest_service.exe";     Parameters: "/install"; Flags: runascurrentuser runhidden
 
 Components: qdbd api_rest;  StatusMsg: "Grant access to conf directory"; Filename: "{sys}\icacls.exe";  Parameters: """{app}\conf"" /grant:r LocalService:(OI)(CI)RX";  Flags: runascurrentuser runhidden
 Components: qdbd api_rest;  StatusMsg: "Grant access to conf directory"; Filename: "{sys}\icacls.exe";  Parameters: """{app}\conf"" /grant:r Administrators:(OI)(CI)F"; Flags: runascurrentuser runhidden
@@ -117,21 +117,21 @@ Components: qdbd;  StatusMsg: "Backup license";       Filename: "cmd"; Parameter
 Components: qdbd;  StatusMsg: "Install license";      Filename: "cmd"; Parameters: "/c ""copy /Y ""{code:GetQdbLicenseFileSource}""      ""{code:GetQdbLicenseFileDestination}""     """; Check: ShouldCopyNewLicense();      Flags: runascurrentuser runhidden
 
 Components: qdbd;     StatusMsg:  "Update Server Configuration";            Filename: "cmd"; Parameters: "/c ""copy /Y ""{app}\conf\qdbd.conf""      ""{app}\conf\qdbd.conf.bak""      && ""{app}\bin\qdbd.exe""      -c ""{app}\conf\qdbd.conf.bak""      --gen-config ""--log-directory={code:GetQdbDir|log}"" ""--root={code:GetQdbDir|db}"" ""--license-file={code:GetQdbLicenseFileToSet}"" > ""{app}\conf\qdbd.conf""     """; Check: FileExists(ExpandConstant('{app}\conf\qdbd.conf'));      Flags: runascurrentuser runhidden
-Components: api_rest; StatusMsg:  "Update API REST Configuration";          Filename: "cmd"; Parameters: "/c ""copy /Y ""{app}\{app}\conf\qdb_rest.conf"" ""{app}\conf\qdb_rest.conf.bak"" && ""copy /Y ""{app}\conf\qdb_rest.conf.sample"" ""{app}\conf\qdb_rest.conf"" """;  Check: FileExists(ExpandConstant('{app}\conf\qdb_rest.conf'));          Flags: runascurrentuser runhidden 
+Components: api_rest; StatusMsg:  "Update REST API Configuration";          Filename: "cmd"; Parameters: "/c ""copy /Y ""{app}\{app}\conf\qdb_rest.conf"" ""{app}\conf\qdb_rest.conf.bak"" && ""copy /Y ""{app}\conf\qdb_rest.conf.sample"" ""{app}\conf\qdb_rest.conf"" """;  Check: FileExists(ExpandConstant('{app}\conf\qdb_rest.conf'));          Flags: runascurrentuser runhidden 
 
 Components: qdbd;     StatusMsg: "Create Server Configuration";           Filename: "cmd"; Parameters: "/c """"{app}\bin\qdbd.exe""      --gen-config --security=true ""--cluster-private-file={app}\conf\cluster_private.key"" ""--user-list={app}\conf\users.conf"" ""--log-directory={code:GetQdbDir|log}"" ""--root={code:GetQdbDir|db}"" ""--license-file={code:GetQdbLicenseFileToSet}"" > ""{app}\conf\qdbd.conf""     """; Check: not FileExists(ExpandConstant('{app}\conf\qdbd.conf'));      Flags: runascurrentuser runhidden
-Components: api_rest; StatusMsg: "Create API REST Certificate";           Filename: "cmd"; Parameters: "/c """"{app}\bin\openssl.exe"" req -config ""{app}\openssl.conf"" -newkey rsa:4096 -nodes -sha512 -x509 -days 3650 -nodes -out ""{app}\conf\qdb_rest.cert.pem"" -keyout ""{app}\conf\qdb_rest.key.pem"" -subj /C=FR/L=Paris/O=Quasardb/CN=Quasardb """; Check: not FileExists(ExpandConstant('{app}\conf\api-rest.cert.pem')); Flags: runascurrentuser runhidden
+Components: api_rest; StatusMsg: "Create REST API Certificate";           Filename: "cmd"; Parameters: "/c """"{app}\bin\openssl.exe"" req -config ""{app}\openssl.conf"" -newkey rsa:4096 -nodes -sha512 -x509 -days 3650 -nodes -out ""{app}\conf\qdb_rest.cert.pem"" -keyout ""{app}\conf\qdb_rest.key.pem"" -subj /C=FR/L=Paris/O=Quasardb/CN=Quasardb """; Check: not FileExists(ExpandConstant('{app}\conf\api-rest.cert.pem')); Flags: runascurrentuser runhidden
 
 
 Components: qdbd;     StatusMsg: "Start Server";         Filename: "sc.exe"; Parameters: "start qdbd";      Flags: runhidden
-Components: api_rest; StatusMsg: "Start API REST";       Filename: "sc.exe"; Parameters: "start qdb_rest";  Flags: runhidden
+Components: api_rest; StatusMsg: "Start REST API";       Filename: "sc.exe"; Parameters: "start qdb_rest";  Flags: runhidden
 
 [UninstallRun]
 Components: qdbd;     StatusMsg: "Stop Server";          Filename: "sc.exe"; Parameters: "stop qdbd";      Flags: runhidden
-Components: api_rest; StatusMsg: "Stop API REST";        Filename: "sc.exe"; Parameters: "stop qdb_rest";  Flags: runhidden
+Components: api_rest; StatusMsg: "Stop REST API";        Filename: "sc.exe"; Parameters: "stop qdb_rest";  Flags: runhidden
 
 Components: qdbd;     StatusMsg: "Remove Server";        Filename: "{app}\bin\qdb_service.exe";      Parameters: "/remove"; Flags: runascurrentuser runhidden
-Components: api_rest; StatusMsg: "Remove API REST";      Filename: "{app}\bin\qdb_rest_service.exe"; Parameters: "/remove"; Flags: runascurrentuser runhidden
+Components: api_rest; StatusMsg: "Remove REST API";      Filename: "{app}\bin\qdb_rest_service.exe"; Parameters: "/remove"; Flags: runascurrentuser runhidden
 
 [Registry]
 Components: qdbd;     Root: HKLM; Subkey: "SYSTEM\CurrentControlSet\Services\qdbd";       ValueType: string; ValueName: "ConfigFile"; ValueData: "{app}\conf\qdbd.conf"
