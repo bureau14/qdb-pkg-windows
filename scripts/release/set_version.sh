@@ -16,4 +16,5 @@ cd $(dirname -- $0)
 cd ${PWD}/../..
 
 # AppCopyright=Copyright (C) 2009-2017 quasardb SAS
-sed -i -e 's/AppCopyright=\(.*2009-\)[0-9]\+/AppCopyright=\1'"${CURRENT_YEAR}"'/' qdb-server.iss
+sed -i -e 's/AppCopyright=\(.*2009-\)[0-9]\+/AppCopyright=\1'"${CURRENT_YEAR}"'/' qdb-server-32.iss
+sed -i -e 's/AppCopyright=\(.*2009-\)[0-9]\+/AppCopyright=\1'"${CURRENT_YEAR}"'/' qdb-server-64.iss
