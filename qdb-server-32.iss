@@ -102,9 +102,9 @@ Components: qdbd;           StatusMsg: "Grant access to db directory";   Filenam
 Components: qdbd;  StatusMsg: "Backup license";       Filename: "cmd"; Parameters: "/c ""move /Y ""{code:GetQdbLicenseFileDestination}"" ""{code:GetQdbLicenseFileDestination}.bak"" """; Check: ShouldCopyNewLicense();      Flags: runascurrentuser runhidden
 Components: qdbd;  StatusMsg: "Install license";      Filename: "cmd"; Parameters: "/c ""copy /Y ""{code:GetQdbLicenseFileSource}""      ""{code:GetQdbLicenseFileDestination}""     """; Check: ShouldCopyNewLicense();      Flags: runascurrentuser runhidden
 
-Components: qdbd;     StatusMsg:  "Update Server Configuration";            Filename: "cmd"; Parameters: "/c ""copy /Y ""{app}\conf\qdbd.conf""      ""{app}\conf\qdbd.conf.bak""      && ""{app}\bin\qdbd.exe""      -c ""{app}\conf\qdbd.conf.bak""      --gen-config ""--log-directory={code:GetQdbDir|log}"" ""--root={code:GetQdbDir|db}"" ""--license-file={code:GetQdbLicenseFileToSet}"" > ""{app}\conf\qdbd.conf""     """; Check: FileExists(ExpandConstant('{app}\conf\qdbd.conf'));      Flags: runascurrentuser runhidden
+Components: qdbd;     StatusMsg:  "Update Server Configuration";            Filename: "cmd"; Parameters: "/c ""copy /Y ""{app}\conf\qdbd.conf""      ""{app}\conf\qdbd.conf.bak""      && ""{app}\bin\qdbd.exe""      -c ""{app}\conf\qdbd.conf.bak""      --gen-config  --security={code:GetQdbSecurityOption} ""--log-directory={code:GetQdbDir|log}"" ""--rocksdb-root={code:GetQdbDir|db}"" ""--license-file={code:GetQdbLicenseFileToSet}"" > ""{app}\conf\qdbd.conf""     """; Check: FileExists(ExpandConstant('{app}\conf\qdbd.conf'));      Flags: runascurrentuser runhidden
 
-Components: qdbd;     StatusMsg: "Create Server Configuration";           Filename: "cmd"; Parameters: "/c """"{app}\bin\qdbd.exe""      --gen-config --security=true ""--cluster-private-file={app}\conf\cluster_private.key"" ""--user-list={app}\conf\users.conf"" ""--log-directory={code:GetQdbDir|log}"" ""--root={code:GetQdbDir|db}"" ""--license-file={code:GetQdbLicenseFileToSet}"" > ""{app}\conf\qdbd.conf""     """; Check: not FileExists(ExpandConstant('{app}\conf\qdbd.conf'));      Flags: runascurrentuser runhidden
+Components: qdbd;     StatusMsg: "Create Server Configuration";           Filename: "cmd"; Parameters: "/c """"{app}\bin\qdbd.exe""      --gen-config --security={code:GetQdbSecurityOption} ""--cluster-private-file={app}\conf\cluster_private.key"" ""--user-list={app}\conf\users.conf"" ""--log-directory={code:GetQdbDir|log}"" ""--rocksdb-root={code:GetQdbDir|db}"" ""--license-file={code:GetQdbLicenseFileToSet}"" > ""{app}\conf\qdbd.conf""     """; Check: not FileExists(ExpandConstant('{app}\conf\qdbd.conf'));      Flags: runascurrentuser runhidden
 
 Components: qdbd;     StatusMsg: "Start Server";         Filename: "sc.exe"; Parameters: "start qdbd";      Flags: runhidden
 
@@ -125,6 +125,7 @@ Name: "{group}\{cm:UninstallProgram,{#MyAppName}}"; Filename: "{uninstallexe}"
 var
   QdbDirPage: TInputDirWizardPage;
   QdbLicensePage: TInputFileWizardPage;
+  QdbSecurityPage: TInputOptionWizardPage;
 
 function GetQdbDir(Param: string): string;
 begin
@@ -160,6 +161,11 @@ begin
   Result := (GetQdbLicenseFileSource('') <> '') and (GetQdbLicenseFileSource('') <> GetPreviousData('LicenseFile', ''));
 end;
 
+function GetQdbSecurityOption(Param: string) : string;
+begin
+  Result := IntToStr(Integer(QdbSecurityPage.Values[0]));
+end;
+
 procedure InitializeWizard;
 begin
   QdbLicensePage := CreateInputFilePage(wpSelectDir, 'License file', 'Do you have a license file?', 'Select a quasardb license file. Leave the box empty for Community Edition.');
@@ -167,6 +173,8 @@ begin
   QdbDirPage := CreateInputDirPage(wpSelectDir, 'Data directories', 'Where to store quasardb files?', 'Select the directories in which quasardb data will be stored, then click Next.', False, 'New Folder');
   QdbDirPage.Add('Database files');
   QdbDirPage.Add('Log files');
+  QdbSecurityPage := CreateInputOptionPage(wpSelectDir, 'Security', 'Do you want to enable security?', 'If you want to enable security, please check the box below, then click Next.', False, False)
+  QdbSecurityPage.Add('Enable security')
 end;
 
 procedure RegisterPreviousData(PreviousDataKey: Integer);
@@ -183,6 +191,7 @@ begin
     QdbLicensePage.Values[0] := GetPreviousData('LicenseFile', '');
     QdbDirPage.Values[0] := GetPreviousData('DbDir', ExpandConstant('{app}\db'));
     QdbDirPage.Values[1] := GetPreviousData('LogDir', ExpandConstant('{app}\log'));
+    QdbSecurityPage.Values[0] := False;
   end;
 
   Result := True;
