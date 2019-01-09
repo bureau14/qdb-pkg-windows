@@ -102,9 +102,9 @@ Components: qdbd;           StatusMsg: "Grant access to db directory";   Filenam
 Components: qdbd;  StatusMsg: "Backup license";       Filename: "cmd"; Parameters: "/c ""move /Y ""{code:GetQdbLicenseFileDestination}"" ""{code:GetQdbLicenseFileDestination}.bak"" """; Check: ShouldCopyNewLicense();      Flags: runascurrentuser runhidden
 Components: qdbd;  StatusMsg: "Install license";      Filename: "cmd"; Parameters: "/c ""copy /Y ""{code:GetQdbLicenseFileSource}""      ""{code:GetQdbLicenseFileDestination}""     """; Check: ShouldCopyNewLicense();      Flags: runascurrentuser runhidden
 
-Components: qdbd;     StatusMsg:  "Update Server Configuration";            Filename: "cmd"; Parameters: "/c ""copy /Y ""{app}\conf\qdbd.conf""      ""{app}\conf\qdbd.conf.bak""      && ""{app}\bin\qdbd.exe""      -c ""{app}\conf\qdbd.conf.bak""      --gen-config  --security={code:GetQdbSecurityOption} ""--log-directory={code:GetQdbDir|log}"" ""--rocksdb-root={code:GetQdbDir|db}"" ""--license-file={code:GetQdbLicenseFileToSet}"" > ""{app}\conf\qdbd.conf""     """; Check: FileExists(ExpandConstant('{app}\conf\qdbd.conf'));      Flags: runascurrentuser runhidden
+Components: qdbd;     StatusMsg:  "Update Server Configuration";            Filename: "cmd"; Parameters: "/c ""copy /Y ""{app}\conf\qdbd.conf""      ""{app}\conf\qdbd.conf.bak""      && ""{app}\bin\qdbd.exe""      -c ""{app}\conf\qdbd.conf.bak""      --gen-config  {code:GetQdbSecurityOption} {code:GetClusterPrivateFileOption} {code:GetUserListFileOption} ""--log-directory={code:GetQdbDir|log}"" ""--rocksdb-root={code:GetQdbDir|db}"" ""--license-file={code:GetQdbLicenseFileToSet}"" > ""{app}\conf\qdbd.conf""     """; Check: FileExists(ExpandConstant('{app}\conf\qdbd.conf'));      Flags: runascurrentuser runhidden
 
-Components: qdbd;     StatusMsg: "Create Server Configuration";           Filename: "cmd"; Parameters: "/c """"{app}\bin\qdbd.exe""      --gen-config --security={code:GetQdbSecurityOption} ""--cluster-private-file={app}\conf\cluster_private.key"" ""--user-list={app}\conf\users.conf"" ""--log-directory={code:GetQdbDir|log}"" ""--rocksdb-root={code:GetQdbDir|db}"" ""--license-file={code:GetQdbLicenseFileToSet}"" > ""{app}\conf\qdbd.conf""     """; Check: not FileExists(ExpandConstant('{app}\conf\qdbd.conf'));      Flags: runascurrentuser runhidden
+Components: qdbd;     StatusMsg: "Create Server Configuration";           Filename: "cmd"; Parameters: "/c """"{app}\bin\qdbd.exe""      --gen-config {code:GetQdbSecurityOption} {code:GetClusterPrivateFileOption} {code:GetUserListFileOption} ""--log-directory={code:GetQdbDir|log}"" ""--rocksdb-root={code:GetQdbDir|db}"" ""--license-file={code:GetQdbLicenseFileToSet}"" > ""{app}\conf\qdbd.conf""     """; Check: not FileExists(ExpandConstant('{app}\conf\qdbd.conf'));      Flags: runascurrentuser runhidden
 
 Components: qdbd;     StatusMsg: "Start Server";         Filename: "sc.exe"; Parameters: "start qdbd";      Flags: runhidden
 
@@ -161,10 +161,35 @@ begin
   Result := (GetQdbLicenseFileSource('') <> '') and (GetQdbLicenseFileSource('') <> GetPreviousData('LicenseFile', ''));
 end;
 
+function IsSecurityEnabled() : boolean;
+begin
+  Result := QdbSecurityPage.Values[0];
+end;
+
 function GetQdbSecurityOption(Param: string) : string;
 begin
-  Result := IntToStr(Integer(QdbSecurityPage.Values[0]));
+  if IsSecurityEnabled() = true then
+    Result := '--security=true' 
+  else
+    Result := '--security=false'
 end;
+
+function GetClusterPrivateFileOption(Param: string) : string;
+begin
+  if IsSecurityEnabled() = true then
+    Result := '--cluster-private-file=ExpandConstant("{app}\conf\cluster_private.key")'
+  else
+    Result := ''
+end;
+
+function GetUserListFileOption(Param: string) : string;
+begin
+  if IsSecurityEnabled() = true then
+    Result := '--user-list=ExpandConstant("{app}\conf\users.conf")'
+  else
+    Result := ''
+end;
+
 
 procedure InitializeWizard;
 begin
