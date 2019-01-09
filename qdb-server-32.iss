@@ -28,7 +28,7 @@
 ; Do not use the same AppId value in installers for other applications.
 ; (To generate a new GUID, click Tools | Generate GUID inside the IDE.)
 ;AppVerName={#MyAppName} {#QdbVersion}
-AppCopyright=Copyright (C) 2009-2018 quasardb SAS
+AppCopyright=Copyright (C) 2009-2019 quasardb SAS
 AppId={{20FBA2FC-C0A4-4080-AAF1-151F170BC532}
 AppName={#MyAppName}
 AppPublisher={#MyAppPublisher}
