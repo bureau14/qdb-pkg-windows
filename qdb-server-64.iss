@@ -305,10 +305,13 @@ end;
 procedure ConfigureQdbRestDefault(FileName: String);
 begin
   if IsSecurityEnabled() = true then
+  begin
     ReplaceValue(FileName, 'cluster_public_key_file', ExpandConstant('{app}\share\qdb\cluster_public.key'), ',')
+  end
   else
+  begin
       ReplaceValue(FileName, 'cluster_public_key_file', '', ',')
-  
+  end;
   ReplaceValue(FileName, 'tls_certificate', ExpandConstant('{app}\conf\qdb_rest.cert.pem'), ',')
   ReplaceValue(FileName, 'tls_key', ExpandConstant('{app}\conf\qdb_rest.key.pem'), ',')
   ReplaceValue(FileName, 'log', GetQdbDir('log') + '\qdb_rest.log', ',')
