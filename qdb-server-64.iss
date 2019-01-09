@@ -147,6 +147,7 @@ var
   QdbDirPage: TInputDirWizardPage;
   QdbLicensePage: TInputFileWizardPage;
   QdbSecurityPage: TInputOptionWizardPage;
+  QdbRestApiPage: TOutputMsgWizardPage;
 
 function GetQdbDir(Param: string): string;
 begin
@@ -205,6 +206,9 @@ begin
   QdbDirPage.Add('Log files');
   QdbSecurityPage := CreateInputOptionPage(wpSelectDir, 'Security', 'Do you want to enable security?', 'If you want to enable security, please check the box below, then click Next.', False, False)
   QdbSecurityPage.Add('Enable security')
+  QdbRestApiPage := CreateOutputMsgPage(wpSelectDir,
+  'Information', 'Please read the following important information before continuing.',
+  'After the installation is finished you will be able to access the dashboard with your user login at: https://localhost:40000/'#13#10#13#10'If the cluster is not secured you can access it directly at: https://localhost:40000/#anonymous');
 end;
 
 procedure RegisterPreviousData(PreviousDataKey: Integer);
