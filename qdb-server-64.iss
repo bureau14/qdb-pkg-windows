@@ -95,8 +95,7 @@ Components: api_rest;  Source: "{#QdbOutputDir}\bin\ssleay32.dll";             D
 Components: api_rest;  Source: "{#QdbOutputDir}\etc\openssl.conf";             DestDir: "{app}";                         Flags: deleteafterinstall;
 Components: dashboard; Source: "{#QdbOutputDir}\assets\*";                     DestDir: "{app}\assets";                  Flags: recursesubdirs;
 
-Components: api_rest;  Source: "{#QdbOutputDir}\etc\qdb_rest.conf.sample"; DestDir: "{app}\conf";                             Flags: recursesubdirs; AfterInstall: ConfigureDefault(ExpandConstant('{app}\conf\qdb_rest.conf.sample'))
-Components: api_rest;  Source: "{#QdbOutputDir}\etc\qdb_rest.conf.sample"; DestDir: "{app}\conf"; DestName: qdb_rest.conf;    Flags: recursesubdirs; AfterInstall: ConfigureDefault(ExpandConstant('{app}\conf\qdb_rest.conf'));  Check: not FileExists(ExpandConstant('{app}\conf\qdb_rest.conf'))
+Components: api_rest;  Source: "{#QdbOutputDir}\etc\qdb_rest.conf.sample"; DestDir: "{app}\conf";                             Flags: recursesubdirs; AfterInstall: ConfigureQdbRestDefault(ExpandConstant('{app}\conf\qdb_rest.conf.sample'))
 
 
 [Run]
@@ -116,11 +115,12 @@ Components: qdbd;           StatusMsg: "Grant access to db directory";   Filenam
 Components: qdbd;  StatusMsg: "Backup license";       Filename: "cmd"; Parameters: "/c ""move /Y ""{code:GetQdbLicenseFileDestination}"" ""{code:GetQdbLicenseFileDestination}.bak"" """; Check: ShouldCopyNewLicense();      Flags: runascurrentuser runhidden
 Components: qdbd;  StatusMsg: "Install license";      Filename: "cmd"; Parameters: "/c ""copy /Y ""{code:GetQdbLicenseFileSource}""      ""{code:GetQdbLicenseFileDestination}""     """; Check: ShouldCopyNewLicense();      Flags: runascurrentuser runhidden
 
-Components: qdbd;     StatusMsg:  "Update Server Configuration";            Filename: "cmd"; Parameters: "/c ""copy /Y ""{app}\conf\qdbd.conf""      ""{app}\conf\qdbd.conf.bak""      && ""{app}\bin\qdbd.exe""      -c ""{app}\conf\qdbd.conf.bak""      --gen-config  {code:GetQdbSecurityOption} {code:GetClusterPrivateFileOption} {code:GetUserListFileOption} --rocksdb-max-open-files=65536 ""--log-directory={code:GetQdbDir|log}"" ""--rocksdb-root={code:GetQdbDir|db}"" ""--license-file={code:GetQdbLicenseFileToSet}"" > ""{app}\conf\qdbd.conf""     """; Check: FileExists(ExpandConstant('{app}\conf\qdbd.conf'));      Flags: runascurrentuser runhidden
-Components: api_rest; StatusMsg:  "Update REST API Configuration";          Filename: "cmd"; Parameters: "/c ""copy /Y ""{app}\{app}\conf\qdb_rest.conf"" ""{app}\conf\qdb_rest.conf.bak"" && ""copy /Y ""{app}\conf\qdb_rest.conf.sample"" ""{app}\conf\qdb_rest.conf"" """;  Check: FileExists(ExpandConstant('{app}\conf\qdb_rest.conf'));          Flags: runascurrentuser runhidden 
+Components: qdbd;     StatusMsg:  "Update Server Configuration";            Filename: "cmd"; Parameters: "/c ""copy /Y ""{app}\conf\qdbd.conf""      ""{app}\conf\qdbd.conf.bak""      && ""{app}\bin\qdbd.exe""      -c ""{app}\conf\qdbd.conf.bak""      --gen-config  {code:GetQdbSecurityOption} --rocksdb-max-open-files=65536 ""--log-directory={code:GetQdbDir|log}"" ""--rocksdb-root={code:GetQdbDir|db}"" ""--license-file={code:GetQdbLicenseFileToSet}"" > ""{app}\conf\qdbd.conf""     """; Check: FileExists(ExpandConstant('{app}\conf\qdbd.conf'));  AfterInstall: ConfigureQdbdDefault(ExpandConstant('{app}\conf\qdbd.conf'));      Flags: runascurrentuser runhidden
+Components: api_rest; StatusMsg:  "Update REST API Configuration";          Filename: "cmd"; Parameters: "/c ""copy /Y ""{app}\conf\qdb_rest.conf"" ""{app}\conf\qdb_rest.conf.bak"" """;  Check: FileExists(ExpandConstant('{app}\conf\qdb_rest.conf')); AfterInstall: ConfigureQdbRestDefault(ExpandConstant('{app}\conf\qdb_rest.conf'));         Flags: runascurrentuser runhidden 
 
-Components: qdbd;     StatusMsg: "Create Server Configuration";           Filename: "cmd"; Parameters: "/c """"{app}\bin\qdbd.exe""      --gen-config {code:GetQdbSecurityOption} {code:GetClusterPrivateFileOption} {code:GetUserListFileOption} --rocksdb-max-open-files=65536 ""--log-directory={code:GetQdbDir|log}"" ""--rocksdb-root={code:GetQdbDir|db}"" ""--license-file={code:GetQdbLicenseFileToSet}"" > ""{app}\conf\qdbd.conf""     """; Check: not FileExists(ExpandConstant('{app}\conf\qdbd.conf'));      Flags: runascurrentuser runhidden
-Components: api_rest; StatusMsg: "Create REST API Certificate";           Filename: "cmd"; Parameters: "/c """"{app}\bin\openssl.exe"" req -config ""{app}\openssl.conf"" -newkey rsa:4096 -nodes -sha512 -x509 -days 3650 -nodes -out ""{app}\conf\qdb_rest.cert.pem"" -keyout ""{app}\conf\qdb_rest.key.pem"" -subj /C=FR/L=Paris/O=Quasardb/CN=Quasardb """; Check: not FileExists(ExpandConstant('{app}\conf\api-rest.cert.pem')); Flags: runascurrentuser runhidden
+Components: qdbd;     StatusMsg: "Create Server Configuration";   Filename: "cmd"; Parameters: "/c """"{app}\bin\qdbd.exe""      --gen-config {code:GetQdbSecurityOption} --rocksdb-max-open-files=65536 ""--log-directory={code:GetQdbDir|log}"" ""--rocksdb-root={code:GetQdbDir|db}"" ""--license-file={code:GetQdbLicenseFileToSet}"" > ""{app}\conf\qdbd.conf""     """; Check: not FileExists(ExpandConstant('{app}\conf\qdbd.conf'));  AfterInstall: ConfigureQdbdDefault(ExpandConstant('{app}\conf\qdbd.conf'));      Flags: runascurrentuser runhidden
+Components: api_rest; StatusMsg: "Create REST API Configuration"; Filename: "cmd"; Parameters: "/c ""copy /Y ""{app}\conf\qdb_rest.conf.sample"" ""{app}\conf\qdb_rest.conf"" """;  Check: not FileExists(ExpandConstant('{app}\conf\qdb_rest.conf')); AfterInstall: ConfigureQdbRestDefault(ExpandConstant('{app}\conf\qdb_rest.conf'));         Flags: runascurrentuser runhidden 
+Components: api_rest; StatusMsg: "Create REST API Certificate";   Filename: "cmd"; Parameters: "/c """"{app}\bin\openssl.exe"" req -config ""{app}\openssl.conf"" -newkey rsa:4096 -nodes -sha512 -x509 -days 3650 -nodes -out ""{app}\conf\qdb_rest.cert.pem"" -keyout ""{app}\conf\qdb_rest.key.pem"" -subj /C=FR/L=Paris/O=Quasardb/CN=Quasardb """; Check: not FileExists(ExpandConstant('{app}\conf\api-rest.cert.pem')); Flags: runascurrentuser runhidden
 
 
 Components: qdbd;     StatusMsg: "Start Server";         Filename: "sc.exe"; Parameters: "start qdbd";      Flags: runhidden
@@ -193,22 +193,6 @@ begin
     Result := '--security=true' 
   else
     Result := '--security=false'
-end;
-
-function GetClusterPrivateFileOption(Param: string) : string;
-begin
-  if IsSecurityEnabled() = true then
-    Result := '--cluster-private-file=ExpandConstant("{app}\conf\cluster_private.key")'
-  else
-    Result := ''
-end;
-
-function GetUserListFileOption(Param: string) : string;
-begin
-  if IsSecurityEnabled() = true then
-    Result := '--user-list=ExpandConstant("{app}\conf\users.conf")'
-  else
-    Result := ''
 end;
 
 
@@ -291,8 +275,8 @@ begin
       if TagPos > 0 then
       begin
         Result := True;
-        Delete(Line, 0, MaxInt);
-        Line := '"' + TagName + '": "' + TagValue + '"' + Comma;
+        Delete(Line, TagPos, MaxInt);
+        Line := Line + '"' + TagName + '": "' + TagValue + '"' + Comma;
         FileLines[I] := Line;
         FileLines.SaveToFile(FileName);
         Break;
@@ -303,9 +287,28 @@ begin
   end;
 end;
 
-procedure ConfigureDefault(FileName: String);
+procedure ConfigureQdbdDefault(FileName: String);
 begin
-  ReplaceValue(FileName, 'cluster_public_key_file', ExpandConstant('{app}\share\qdb\cluster_public.key'), ',')
+  if IsSecurityEnabled() = true then
+  begin
+    ReplaceValue(FileName, 'cluster_private_file', ExpandConstant('{app}\conf\cluster_private.key'), ',')
+    ReplaceValue(FileName, 'user_list', ExpandConstant('{app}\conf\users.conf'), ' ')
+  end
+  else
+  begin
+    ReplaceValue(FileName, 'cluster_private_file', '', ',')
+    ReplaceValue(FileName, 'user_list', '', ' ')
+  end;
+end;
+
+
+procedure ConfigureQdbRestDefault(FileName: String);
+begin
+  if IsSecurityEnabled() = true then
+    ReplaceValue(FileName, 'cluster_public_key_file', ExpandConstant('{app}\share\qdb\cluster_public.key'), ',')
+  else
+      ReplaceValue(FileName, 'cluster_public_key_file', '', ',')
+  
   ReplaceValue(FileName, 'tls_certificate', ExpandConstant('{app}\conf\qdb_rest.cert.pem'), ',')
   ReplaceValue(FileName, 'tls_key', ExpandConstant('{app}\conf\qdb_rest.key.pem'), ',')
   ReplaceValue(FileName, 'log', GetQdbDir('log') + '\qdb_rest.log', ',')

@@ -102,9 +102,9 @@ Components: qdbd;           StatusMsg: "Grant access to db directory";   Filenam
 Components: qdbd;  StatusMsg: "Backup license";       Filename: "cmd"; Parameters: "/c ""move /Y ""{code:GetQdbLicenseFileDestination}"" ""{code:GetQdbLicenseFileDestination}.bak"" """; Check: ShouldCopyNewLicense();      Flags: runascurrentuser runhidden
 Components: qdbd;  StatusMsg: "Install license";      Filename: "cmd"; Parameters: "/c ""copy /Y ""{code:GetQdbLicenseFileSource}""      ""{code:GetQdbLicenseFileDestination}""     """; Check: ShouldCopyNewLicense();      Flags: runascurrentuser runhidden
 
-Components: qdbd;     StatusMsg:  "Update Server Configuration";            Filename: "cmd"; Parameters: "/c ""copy /Y ""{app}\conf\qdbd.conf""      ""{app}\conf\qdbd.conf.bak""      && ""{app}\bin\qdbd.exe""      -c ""{app}\conf\qdbd.conf.bak""      --gen-config  {code:GetQdbSecurityOption} {code:GetClusterPrivateFileOption} {code:GetUserListFileOption} --rocksdb-max-open-files=65536 ""--log-directory={code:GetQdbDir|log}"" ""--rocksdb-root={code:GetQdbDir|db}"" ""--license-file={code:GetQdbLicenseFileToSet}"" > ""{app}\conf\qdbd.conf""     """; Check: FileExists(ExpandConstant('{app}\conf\qdbd.conf'));      Flags: runascurrentuser runhidden
+Components: qdbd;     StatusMsg:  "Update Server Configuration";            Filename: "cmd"; Parameters: "/c ""copy /Y ""{app}\conf\qdbd.conf""      ""{app}\conf\qdbd.conf.bak""      && ""{app}\bin\qdbd.exe""      -c ""{app}\conf\qdbd.conf.bak""      --gen-config  {code:GetQdbSecurityOption} --rocksdb-max-open-files=65536 ""--log-directory={code:GetQdbDir|log}"" ""--rocksdb-root={code:GetQdbDir|db}"" ""--license-file={code:GetQdbLicenseFileToSet}"" > ""{app}\conf\qdbd.conf""     """; Check: FileExists(ExpandConstant('{app}\conf\qdbd.conf'));  AfterInstall: ConfigureQdbdDefault(ExpandConstant('{app}\conf\qdbd.conf'));      Flags: runascurrentuser runhidden
 
-Components: qdbd;     StatusMsg: "Create Server Configuration";           Filename: "cmd"; Parameters: "/c """"{app}\bin\qdbd.exe""      --gen-config {code:GetQdbSecurityOption} {code:GetClusterPrivateFileOption} {code:GetUserListFileOption} --rocksdb-max-open-files=65536 ""--log-directory={code:GetQdbDir|log}"" ""--rocksdb-root={code:GetQdbDir|db}"" ""--license-file={code:GetQdbLicenseFileToSet}"" > ""{app}\conf\qdbd.conf""     """; Check: not FileExists(ExpandConstant('{app}\conf\qdbd.conf'));      Flags: runascurrentuser runhidden
+Components: qdbd;     StatusMsg: "Create Server Configuration";           Filename: "cmd"; Parameters: "/c """"{app}\bin\qdbd.exe""      --gen-config {code:GetQdbSecurityOption} --rocksdb-max-open-files=65536 ""--log-directory={code:GetQdbDir|log}"" ""--rocksdb-root={code:GetQdbDir|db}"" ""--license-file={code:GetQdbLicenseFileToSet}"" > ""{app}\conf\qdbd.conf""     """; Check: not FileExists(ExpandConstant('{app}\conf\qdbd.conf'));  AfterInstall: ConfigureQdbdDefault(ExpandConstant('{app}\conf\qdbd.conf'));      Flags: runascurrentuser runhidden
 
 Components: qdbd;     StatusMsg: "Start Server";         Filename: "sc.exe"; Parameters: "start qdbd";      Flags: runhidden
 
@@ -174,23 +174,6 @@ begin
     Result := '--security=false'
 end;
 
-function GetClusterPrivateFileOption(Param: string) : string;
-begin
-  if IsSecurityEnabled() = true then
-    Result := '--cluster-private-file=ExpandConstant("{app}\conf\cluster_private.key")'
-  else
-    Result := ''
-end;
-
-function GetUserListFileOption(Param: string) : string;
-begin
-  if IsSecurityEnabled() = true then
-    Result := '--user-list=ExpandConstant("{app}\conf\users.conf")'
-  else
-    Result := ''
-end;
-
-
 procedure InitializeWizard;
 begin
   QdbLicensePage := CreateInputFilePage(wpSelectDir, 'License file', 'Do you have a license file?', 'Select a quasardb license file. Leave the box empty for Community Edition.');
@@ -247,4 +230,51 @@ begin
   S := S + MemoComponentsInfo + NewLine + NewLine;
   S := S + MemoGroupInfo;
   Result := S;
+end;
+
+function ReplaceValue(const FileName, TagName, TagValue, Comma: string): Boolean;
+var
+  I: Integer;
+  Tag: string;
+  Line: string;
+  TagPos: Integer;
+  FileLines: TStringList;
+begin
+  StringChangeEx(TagValue, '\', '/', True);
+  Result := False;
+  FileLines := TStringList.Create;
+  try
+    Tag := '"' + TagName + '"';
+    FileLines.LoadFromFile(FileName);
+    for I := 0 to FileLines.Count - 1 do
+    begin
+      Line := FileLines[I];
+      TagPos := Pos(Tag, Line);
+      if TagPos > 0 then
+      begin
+        Result := True;
+        Delete(Line, TagPos, MaxInt);
+        Line := Line + '"' + TagName + '": "' + TagValue + '"' + Comma;
+        FileLines[I] := Line;
+        FileLines.SaveToFile(FileName);
+        Break;
+      end;
+    end;
+  finally
+    FileLines.Free;
+  end;
+end;
+
+procedure ConfigureQdbdDefault(FileName: String);
+begin
+  if IsSecurityEnabled() = true then
+  begin
+    ReplaceValue(FileName, 'cluster_private_file', ExpandConstant('{app}\conf\cluster_private.key'), ',')
+    ReplaceValue(FileName, 'user_list', ExpandConstant('{app}\conf\users.conf'), ' ')
+  end
+  else
+  begin
+    ReplaceValue(FileName, 'cluster_private_file', '', ',')
+    ReplaceValue(FileName, 'user_list', '', ' ')
+  end;
 end;
