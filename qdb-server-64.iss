@@ -147,7 +147,7 @@ var
   QdbDirPage: TInputDirWizardPage;
   QdbLicensePage: TInputFileWizardPage;
   QdbSecurityPage: TInputOptionWizardPage;
-  QdbRestApiPage: TOutputMsgWizardPage;
+  QdbDashboardInfoPage: TOutputMsgMemoWizardPage;
 
 function GetQdbDir(Param: string): string;
 begin
@@ -183,9 +183,25 @@ begin
   Result := (GetQdbLicenseFileSource('') <> '') and (GetQdbLicenseFileSource('') <> GetPreviousData('LicenseFile', ''));
 end;
 
+function SetSecurity() : string;
+begin
+  if QdbSecurityPage.Values[0] = True then
+    Result := 'True'
+  else
+    Result := 'False'
+end;
+
+function GetSecurity() : boolean;
+begin
+  if GetPreviousData('SecurityEnabled', 'False') = 'False' then
+    Result := False
+  else
+    Result := True
+end;
+
 function IsSecurityEnabled() : boolean;
 begin
-  Result := QdbSecurityPage.Values[0];
+  Result := GetSecurity();
 end;
 
 function GetQdbSecurityOption(Param: string) : string;
@@ -194,6 +210,25 @@ begin
     Result := '--security=true' 
   else
     Result := '--security=false'
+end;
+
+function DashboardUrl() : string;
+begin
+  if IsSecurityEnabled() = true then
+    Result := 'https://localhost:40000'
+  else
+    Result := 'https://localhost:40000/#anonymous'
+end;
+
+function QdbDashboardInfoText() : string;
+var
+  Text: String;
+begin
+  Text := 'You are now able to access the dashboard '
+  if IsSecurityEnabled() = true then
+    Text := Text + 'with your user secret information';
+  Text := Text + ' at ' + DashboardUrl();
+  Result := Text
 end;
 
 
@@ -206,9 +241,10 @@ begin
   QdbDirPage.Add('Log files');
   QdbSecurityPage := CreateInputOptionPage(wpSelectDir, 'Security', 'Do you want to enable security?', 'If you want to enable security, please check the box below, then click Next.', False, False)
   QdbSecurityPage.Add('Enable security')
-  QdbRestApiPage := CreateOutputMsgPage(wpSelectDir,
+  QdbDashboardInfoPage := CreateOutputMsgMemoPage(wpInfoAfter,
   'Information', 'Please read the following important information before continuing.',
-  'After the installation is finished you will be able to access the dashboard with your user login at: https://localhost:40000/'#13#10#13#10'If the cluster is not secured you can access it directly at: https://localhost:40000/#anonymous');
+  'When you are ready to finish with Setup, click Next.',
+  QdbDashboardInfoText());
 end;
 
 procedure RegisterPreviousData(PreviousDataKey: Integer);
@@ -216,6 +252,7 @@ begin
   SetPreviousData(PreviousDataKey, 'DbDir', QdbDirPage.Values[0]);
   SetPreviousData(PreviousDataKey, 'LogDir', QdbDirPage.Values[1]);
   SetPreviousData(PreviousDataKey, 'LicenseFile', GetQdbLicenseFileDestination(''));
+  SetPreviousData(PreviousDataKey, 'SecurityEnabled', SetSecurity());
 end;
 
 function NextButtonClick(CurPageID: Integer): boolean;
@@ -225,7 +262,7 @@ begin
     QdbLicensePage.Values[0] := GetPreviousData('LicenseFile', '');
     QdbDirPage.Values[0] := GetPreviousData('DbDir', ExpandConstant('{app}\db'));
     QdbDirPage.Values[1] := GetPreviousData('LogDir', ExpandConstant('{app}\log'));
-    QdbSecurityPage.Values[0] := False;
+    QdbSecurityPage.Values[0] := GetSecurity();
   end;
 
   Result := True;
