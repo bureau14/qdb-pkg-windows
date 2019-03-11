@@ -83,12 +83,12 @@ Components: qdbd;     Source: "{#QdbOutputDir}\bin\qdb_user_add.exe";         De
 Components: utils;    Source: "{#QdbOutputDir}\bin\qdb_max_conn.exe";         DestDir: "{app}\bin";                     Flags: ignoreversion;
 Components: utils;    Source: "{#QdbOutputDir}\bin\qdbsh.exe";                DestDir: "{app}\bin";                     Flags: ignoreversion;
 Components: utils;    Source: "{#QdbOutputDir}\bin\qdb-benchmark.exe";        DestDir: "{app}\bin";                     Flags: ignoreversion;
-Components: utils;    Source: "{#QdbOutputDir}\bin\qdb_railgun.exe";          DestDir: "{app}\bin";                     Flags: ignoreversion;
+Components: utils;    Source: "{#QdbOutputDir}\bin\qdb_import.exe";          DestDir: "{app}\bin";                     Flags: ignoreversion;
 Components: doc;      Source: "{#QdbOutputDir}\share\doc\qdb\*";              DestDir: "{app}\doc";                     Flags: recursesubdirs;
 
 [Run]
 Components: qdbd;  StatusMsg: "Generating cluster key";   Filename: "{app}\bin\qdb_cluster_keygen.exe"; Parameters: "-p              ""{app}\share\qdb\cluster_public.key"" -s ""{app}\conf\cluster_private.key""";      Flags: runascurrentuser runhidden
-Components: utils; StatusMsg: "Adding shell user";        Filename: "{app}\bin\qdb_user_add.exe";       Parameters: "-u qdbsh -p     ""{app}\conf\users.conf""              -s ""{app}\conf\qdbsh_private.key""";         Flags: runascurrentuser runhidden
+Components: utils; StatusMsg: "Adding shell user";        Filename: "{app}\bin\qdb_user_add.exe";       Parameters: "-u qdbsh --uid=3 --superuser=0 --privileges=510 -p     ""{app}\conf\users.conf""              -s ""{app}\conf\qdbsh_private.key""";         Flags: runascurrentuser runhidden
 
 Components: qdbd;     StatusMsg: "Install Server";       Filename: "{app}\bin\qdb_service.exe";          Parameters: "/install"; Flags: runascurrentuser runhidden
 
