@@ -85,6 +85,7 @@ Components: qdbd;      Source: "{#QdbOutputDir}\bin\qdb_user_add.exe";         D
 Components: utils;     Source: "{#QdbOutputDir}\bin\qdb_max_conn.exe";         DestDir: "{app}\bin";                     Flags: ignoreversion;
 Components: utils;     Source: "{#QdbOutputDir}\bin\qdbsh.exe";                DestDir: "{app}\bin";                     Flags: ignoreversion;
 Components: utils;     Source: "{#QdbOutputDir}\bin\qdb-benchmark.exe";        DestDir: "{app}\bin";                     Flags: ignoreversion;
+Components: utils;     Source: "{#QdbOutputDir}\bin\qdb_csv_generator.exe";    DestDir: "{app}\bin";                     Flags: ignoreversion;
 Components: utils;     Source: "{#QdbOutputDir}\bin\qdb_export.exe";           DestDir: "{app}\bin";                     Flags: ignoreversion;
 Components: utils;     Source: "{#QdbOutputDir}\bin\qdb_import.exe";           DestDir: "{app}\bin";                     Flags: ignoreversion;
 Components: doc;       Source: "{#QdbOutputDir}\share\doc\qdb\*";              DestDir: "{app}\doc";                     Flags: recursesubdirs;
