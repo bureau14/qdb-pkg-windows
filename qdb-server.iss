@@ -112,7 +112,7 @@ Components: api_rest;  Source: "{#QdbOutputDir}\etc\qdb_rest.conf.sample";     D
 #endif
 
 [Run]
-Components: utils; StatusMsg: "Adding shell user";        Filename: "cmd"; Parameters: "/c ""move /Y ""{app}\conf\users.conf""      ""{app}\conf\users.conf.bak""      && ""{app}\bin\qdb_user_add.exe"" -u qdbsh --uid=3 --superuser=0 --privileges=510 -p     ""{app}\conf\users.conf""              -s ""{app}\conf\qdbsh_private.key""";      Flags: runascurrentuser runhidden
+Components: utils; StatusMsg: "Adding shell user";          Filename: "cmd"; Parameters: "/c ""move /Y ""{app}\conf\users.conf"" ""{app}\conf\users.conf.bak""";  AfterInstall: AddUsers(); Flags: runascurrentuser runhidden
 
 Components: qdbd;  StatusMsg: "Generating cluster key";         Filename: "{app}\bin\qdb_cluster_keygen.exe"; Parameters: "-p              ""{app}\share\qdb\cluster_public.key"" -s ""{app}\conf\cluster_private.key""";      Flags: runascurrentuser runhidden
 
@@ -125,13 +125,12 @@ Components: qdbd;  StatusMsg: "Secure conf directory";          Filename: "{sys}
 Components: qdbd;  StatusMsg: "Grant access to log directory";  Filename: "{sys}\icacls.exe";  Parameters: """{code:GetQdbDir|log}"" /grant:r LocalService:(OI)(CI)F";      Flags: runascurrentuser runhidden
 Components: qdbd;  StatusMsg: "Grant access to db directory";   Filename: "{sys}\icacls.exe";  Parameters: """{code:GetQdbDir|db}""  /grant:r LocalService:(OI)(CI)F";      Flags: runascurrentuser runhidden
 
-Components: qdbd;  StatusMsg: "Backup license";                 Filename: "cmd"; Parameters: "/c ""move /Y ""{code:GetQdbLicenseFileDestination}"" ""{code:GetQdbLicenseFileDestination}.bak"" """; Check: ShouldCopyNewLicense();      Flags: runascurrentuser runhidden
-Components: qdbd;  StatusMsg: "Install license";                Filename: "cmd"; Parameters: "/c ""copy /Y ""{code:GetQdbLicenseFileSource}""      ""{code:GetQdbLicenseFileDestination}""     """; Check: ShouldCopyNewLicense();      Flags: runascurrentuser runhidden
+Components: qdbd;  StatusMsg: "Backup license";       Filename: "cmd"; Parameters: "/c ""move /Y ""{code:GetQdbLicenseFileDestination}"" ""{code:GetQdbLicenseFileDestination}.bak"" """; Check: ShouldCopyNewLicense();      Flags: runascurrentuser runhidden
+Components: qdbd;  StatusMsg: "Install license";      Filename: "cmd"; Parameters: "/c ""copy /Y ""{code:GetQdbLicenseFileSource}""      ""{code:GetQdbLicenseFileDestination}""     """; Check: ShouldCopyNewLicense();      Flags: runascurrentuser runhidden
 
-Components: qdbd;  StatusMsg: "Update Server Configuration";    Filename: "cmd"; Parameters: "/c ""copy /Y ""{app}\conf\qdbd.conf""      ""{app}\conf\qdbd.conf.bak""      && ""{app}\bin\qdbd.exe""      -c ""{app}\conf\qdbd.conf.bak""      --gen-config  {code:GetQdbSecurityOption} --rocksdb-max-open-files=65536 ""--log-directory={code:GetQdbDir|log}"" ""--rocksdb-root={code:GetQdbDir|db}"" ""--license-file={code:GetQdbLicenseFileToSet}"" > ""{app}\conf\qdbd.conf""     """; Check: FileExists(ExpandConstant('{app}\conf\qdbd.conf'));  AfterInstall: ConfigureQdbdDefault(ExpandConstant('{app}\conf\qdbd.conf'));      Flags: runascurrentuser runhidden
-Components: qdbd;  StatusMsg: "Create Server Configuration";    Filename: "cmd"; Parameters: "/c """"{app}\bin\qdbd.exe""      --gen-config {code:GetQdbSecurityOption} --rocksdb-max-open-files=65536 ""--log-directory={code:GetQdbDir|log}"" ""--rocksdb-root={code:GetQdbDir|db}"" ""--license-file={code:GetQdbLicenseFileToSet}"" > ""{app}\conf\qdbd.conf""     """; Check: not FileExists(ExpandConstant('{app}\conf\qdbd.conf'));  AfterInstall: ConfigureQdbdDefault(ExpandConstant('{app}\conf\qdbd.conf'));      Flags: runascurrentuser runhidden
-Components: qdbd;  StatusMsg: "Start Server";                   Filename: "sc.exe"; Parameters: "start qdbd";      Flags: runhidden
-
+Components: qdbd;  StatusMsg: "Update Server Configuration"; Filename: "cmd"; Parameters: "/c ""copy /Y ""{app}\conf\qdbd.conf""      ""{app}\conf\qdbd.conf.bak""      && ""{app}\bin\qdbd.exe""      -c ""{app}\conf\qdbd.conf.bak""      --gen-config  {code:GetQdbSecurityOption} --rocksdb-max-open-files=65536 ""--log-directory={code:GetQdbDir|log}"" ""--rocksdb-root={code:GetQdbDir|db}"" ""--license-file={code:GetQdbLicenseFileToSet}"" > ""{app}\conf\qdbd.conf""     """; Check: FileExists(ExpandConstant('{app}\conf\qdbd.conf'));  AfterInstall: ConfigureQdbdDefault(ExpandConstant('{app}\conf\qdbd.conf'));      Flags: runascurrentuser runhidden
+Components: qdbd;  StatusMsg: "Create Server Configuration"; Filename: "cmd"; Parameters: "/c """"{app}\bin\qdbd.exe""      --gen-config {code:GetQdbSecurityOption} --rocksdb-max-open-files=65536 ""--log-directory={code:GetQdbDir|log}"" ""--rocksdb-root={code:GetQdbDir|db}"" ""--license-file={code:GetQdbLicenseFileToSet}"" > ""{app}\conf\qdbd.conf""     """; Check: not FileExists(ExpandConstant('{app}\conf\qdbd.conf'));  AfterInstall: ConfigureQdbdDefault(ExpandConstant('{app}\conf\qdbd.conf'));      Flags: runascurrentuser runhidden
+Components: qdbd;  StatusMsg: "Start Server";                Filename: "sc.exe"; Parameters: "start qdbd";      Flags: runhidden
 
 #if QdbIs64bit == "1"
 Components: api_rest; StatusMsg: "Install REST API";                Filename: "{app}\bin\qdb_rest_service.exe";     Parameters: "/install"; Flags: runascurrentuser runhidden
@@ -174,7 +173,13 @@ Name: "{group}\{cm:UninstallProgram,{#MyAppName}}"; Filename: "{uninstallexe}"
 var
   QdbDirPage: TInputDirWizardPage;
   QdbLicensePage: TInputFileWizardPage;
+  
+  QdbAddUserPage: TInputQueryWizardPage;
+  AddUserPageID: Integer;
+  
   QdbSecurityPage: TInputOptionWizardPage;
+  QdbSecurityPageID: Integer;
+  
   QdbDashboardInfoPage: TOutputMsgMemoWizardPage;
 
 function GetQdbDir(Param: string): string;
@@ -229,7 +234,7 @@ end;
 
 function IsSecurityEnabled() : boolean;
 begin
-  Result := GetSecurity();
+  Result := QdbSecurityPage.Values[0];
 end;
 
 function GetQdbSecurityOption(Param: string) : string;
@@ -243,9 +248,9 @@ end;
 function DashboardUrl() : string;
 begin
   if IsSecurityEnabled() = true then
-    Result := 'https://localhost:40000'
+    Result := 'https://localhost:40443'
   else
-    Result := 'https://localhost:40000/#anonymous'
+    Result := 'https://localhost:40080/#anonymous'
 end;
 
 function QdbDashboardInfoText() : string;
@@ -259,20 +264,29 @@ begin
   Result := Text
 end;
 
+function ShouldSkipPage(PageID: Integer): Boolean;
+begin
+  Result := False;
+  if PageID = AddUserPageID then
+    Result := not IsSecurityEnabled();
+end;
 
 procedure InitializeWizard;
 begin
   QdbLicensePage := CreateInputFilePage(wpSelectDir, 'License file', 'Do you have a license file?', 'Select a quasardb license file. Leave the box empty for Community Edition.');
   QdbLicensePage.Add('Location of quasardb license:', 'Text files|*.txt|All files|*.*', '.txt');
+  
   QdbDirPage := CreateInputDirPage(wpSelectDir, 'Data directories', 'Where to store quasardb files?', 'Select the directories in which quasardb data will be stored, then click Next.', False, 'New Folder');
   QdbDirPage.Add('Database files');
   QdbDirPage.Add('Log files');
+
+  QdbAddUserPage := CreateInputQueryPage(wpSelectDir, 'Add user', 'Would you like to add a user?', 'Please specify the name of the user you would like to add.');
+  QdbAddUserPage.Add('Name', False);
+  AddUserPageID := QdbAddUserPage.ID;
+
   QdbSecurityPage := CreateInputOptionPage(wpSelectDir, 'Security', 'Do you want to enable security?', 'If you want to enable security, please check the box below, then click Next.', False, False)
   QdbSecurityPage.Add('Enable security')
-  QdbDashboardInfoPage := CreateOutputMsgMemoPage(wpInfoAfter,
-  'Information', 'Please read the following important information before continuing.',
-  'When you are ready to finish with Setup, click Next.',
-  QdbDashboardInfoText());
+  QdbSecurityPageID := QdbSecurityPage.ID;
 end;
 
 procedure RegisterPreviousData(PreviousDataKey: Integer);
@@ -281,6 +295,7 @@ begin
   SetPreviousData(PreviousDataKey, 'LogDir', QdbDirPage.Values[1]);
   SetPreviousData(PreviousDataKey, 'LicenseFile', GetQdbLicenseFileDestination(''));
   SetPreviousData(PreviousDataKey, 'SecurityEnabled', SetSecurity());
+  SetPreviousData(PreviousDataKey, 'Username', QdbAddUserPage.Values[0]);
 end;
 
 function NextButtonClick(CurPageID: Integer): boolean;
@@ -291,8 +306,18 @@ begin
     QdbDirPage.Values[0] := GetPreviousData('DbDir', ExpandConstant('{app}\db'));
     QdbDirPage.Values[1] := GetPreviousData('LogDir', ExpandConstant('{app}\log'));
     QdbSecurityPage.Values[0] := GetSecurity();
+    QdbAddUserPage.Values[0] := GetPreviousData('Username', ExpandConstant('{username}'));
   end;
 
+  if CurPageID = QdbSecurityPageID then
+  begin
+    {We create this page here because the text depends on wether or not the security is enabled}
+
+    QdbDashboardInfoPage := CreateOutputMsgMemoPage(wpInfoAfter,
+      'Information', 'Please read the following important information before continuing.',
+      'When you are ready to finish with Setup, click Next.',
+      QdbDashboardInfoText());
+  end;
   Result := True;
 end;
 
@@ -385,4 +410,28 @@ begin
   ReplaceValue(FileName, 'tls_key', ExpandConstant('{app}\conf\qdb_rest.key.pem'), ',')
   ReplaceValue(FileName, 'log', GetQdbDir('log') + '\qdb_rest.log', ',')
   ReplaceValue(FileName, 'assets', ExpandConstant('{app}\assets'), ' ')
+end;
+
+procedure AddUser(Username: String; uid: Integer);
+var
+  ResultCode: Integer;
+  ConfDir: String;
+  UsersFile: String;
+  UserPrivateKeyFile: String;
+  Params: String;
+begin
+  ConfDir :=  ExpandConstant('{app}\conf\');
+  UsersFile := '"' + ConfDir + 'users.conf"';
+  UserPrivateKeyFile := '"' + ConfDir + Username + '_private.key"';
+  Params := '-u ' + Username + ' --uid=' + IntToStr(uid) + ' --superuser=0 --privileges=510 -p ' + UsersFile + ' -s ' + UserPrivateKeyFile;
+  Exec(ExpandConstant('{app}\bin\qdb_user_add.exe'), Params, '', SW_HIDE, ewWaitUntilTerminated, ResultCode);
+end;
+
+procedure AddUsers();
+begin
+  if IsSecurityEnabled() = true then
+  begin
+    AddUser('qdbsh', 3);
+    AddUser(QdbAddUserPage.Values[0], 10);
+  end;
 end;
