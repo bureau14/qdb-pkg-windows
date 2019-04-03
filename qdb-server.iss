@@ -250,7 +250,7 @@ begin
   if IsSecurityEnabled() = true then
     Result := 'https://localhost:40443'
   else
-    Result := 'https://localhost:40080/#anonymous'
+    Result := 'http://localhost:40080/#anonymous'
 end;
 
 function QdbDashboardInfoText() : string;
