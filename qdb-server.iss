@@ -7,7 +7,11 @@
 #endif
 
 #ifndef QdbSetupBaseName
+#if QdbIs64bit == "1"
 #define QdbSetupBaseName "qdb-windows-64bit-setup"
+#else
+#define QdbSetupBaseName "qdb-windows-32bit-setup"
+#endif
 #endif
 
 #ifndef QdbOutputDir
@@ -62,10 +66,10 @@ Name: client; Description: "Client installation"
 Name: custom; Description: "Custom installation"; Flags: iscustom
 
 [Components]
-Name: qdbd;      Description: "Server (qdbd)";           Types: full server;
-Name: utils;     Description: "Utilities (qdbsh...)";    Types: full client;
-Name: api;       Description: "C API (qdb_api.dll)";     Types: full client;
-Name: doc;       Description: "Documentation";           Types: full server client;
+Name: qdbd;   Description: "Server (qdbd)";                     Types: full server;
+Name: utils;  Description: "Utilities (qdbsh...)";              Types: full client;
+Name: api;    Description: "C API (qdb_api.dll)";               Types: full client;
+Name: doc;    Description: "Documentation";                     Types: full server client;
 
 #if QdbIs64bit == "1"
 Name: api_rest;  Description: "REST API (qdb_rest)";     Types: full server;
@@ -149,8 +153,8 @@ Components: api_rest; StatusMsg: "Start REST API";       Filename: "sc.exe"; Par
 #endif
 
 [UninstallRun]
-Components: qdbd;     StatusMsg: "Stop Server";          Filename: "sc.exe"; Parameters: "stop qdbd";                               Flags: runhidden
-Components: qdbd;     StatusMsg: "Remove Server";        Filename: "{app}\bin\qdb_service.exe";             Parameters: "/remove";  Flags: runascurrentuser runhidden
+Components: qdbd;     StatusMsg: "Stop Server";         Filename: "sc.exe"; Parameters: "stop qdbd";                                          Flags: runhidden
+Components: qdbd;     StatusMsg: "Remove Server";       Filename: "{app}\bin\qdb_service.exe";        Parameters: "/remove";                  Flags: runascurrentuser runhidden
 
 #if QdbIs64bit == "1"
 Components: api_rest; StatusMsg: "Stop REST API";        Filename: "sc.exe"; Parameters: "stop qdb_rest";                           Flags: runhidden
