@@ -427,7 +427,7 @@ begin
   ConfDir :=  ExpandConstant('{app}\conf\');
   UsersFile := '"' + ConfDir + 'users.conf"';
   UserPrivateKeyFile := '"' + ConfDir + Username + '_private.key"';
-  Params := '-u ' + Username + ' --uid=' + IntToStr(uid) + ' --superuser=0 --privileges=510 -p ' + UsersFile + ' -s ' + UserPrivateKeyFile;
+  Params := '-u ' + Username + ' --uid=' + IntToStr(uid) + ' --superuser=0 --privileges=16894 -p ' + UsersFile + ' -s ' + UserPrivateKeyFile;
   Exec(ExpandConstant('{app}\bin\qdb_user_add.exe'), Params, '', SW_HIDE, ewWaitUntilTerminated, ResultCode);
 end;
 
