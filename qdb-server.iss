@@ -90,7 +90,6 @@ Components: api_rest;  Name: "{code:GetQdbDir|log}"; Flags: uninsneveruninstall
 
 [Files]
 Components: api;       Source: "{#QdbOutputDir}\bin\qdb_api.dll";              DestDir: "{sys}";         Flags: ignoreversion;
-Components: qdbd;      Source: "{#QdbOutputDir}\bin\qdb_dbtool.exe";           DestDir: "{app}\bin";     Flags: ignoreversion;
 Components: qdbd;      Source: "{#QdbOutputDir}\bin\qdb_service.exe";          DestDir: "{app}\bin";     Flags: ignoreversion;
 Components: qdbd;      Source: "{#QdbOutputDir}\bin\qdbd.exe";                 DestDir: "{app}\bin";     Flags: ignoreversion;
 Components: qdbd;      Source: "{#QdbOutputDir}\bin\qdb_cluster_keygen.exe";   DestDir: "{app}\bin";     Flags: ignoreversion;
