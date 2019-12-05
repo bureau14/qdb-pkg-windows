@@ -131,7 +131,7 @@ Components: qdbd;  StatusMsg: "Backup license";       Filename: "cmd"; Parameter
 Components: qdbd;  StatusMsg: "Install license";      Filename: "cmd"; Parameters: "/c ""copy /Y ""{code:GetQdbLicenseFileSource}""      ""{code:GetQdbLicenseFileDestination}""     """; Check: ShouldCopyNewLicense();      Flags: runascurrentuser runhidden
  
 Components: qdbd;  StatusMsg: "Backup Server Configuration"; Filename: "cmd"; Parameters: "/c ""move /Y ""{app}\conf\qdbd.conf"" ""{app}\conf\qdbd.conf.bak"" "" "; Check: FileExists(ExpandConstant('{app}\conf\qdbd.conf'));  Flags: runascurrentuser runhidden
-Components: qdbd;  StatusMsg: "Create Server Configuration"; Filename: "cmd"; Parameters: "/c "" ""{app}\bin\qdbd.exe"" --gen-config {code:GetQdbSecurityOption} --rocksdb-max-open-files=65536 ""--log-directory={code:GetQdbDir|log}"" ""--rocksdb-root={code:GetQdbDir|db}"" ""--license-file={code:GetQdbLicenseFileToSet}"" > ""{app}\conf\qdbd.conf"" "" "; AfterInstall: ConfigureQdbdDefault(ExpandConstant('{app}\conf\qdbd.conf'));      Flags: runascurrentuser runhidden
+Components: qdbd;  StatusMsg: "Create Server Configuration"; Filename: "cmd"; Parameters: "/c "" ""{app}\bin\qdbd.exe"" --gen-config {code:GetQdbSecurityOption} --rocksdb-max-open-files=65536 ""--log-directory={code:GetQdbDir|log}"" ""--rocksdb-root={code:GetQdbDir|db}"" ""--license-file={code:GetQdbLicenseFileToSet}"" > ""{app}\conf\qdbd.conf"" "" "; Flags: runascurrentuser runhidden
 
 Components: qdbd;  StatusMsg: "Start Server";                Filename: "sc.exe"; Parameters: "start qdbd";      Flags: runhidden
 
@@ -243,9 +243,13 @@ end;
 function GetQdbSecurityOption(Param: string) : string;
 begin
   if IsSecurityEnabled() = true then
-    Result := '--security=true' 
+  begin
+    Result := '--security=true';
+    Result := Result + ' --user-list="' + ExpandConstant('{app}\conf\users.conf') + '"';
+    Result := Result + ' --cluster-private-file="' + ExpandConstant('{app}\conf\cluster_private.key') + '"';
+  end
   else
-    Result := '--security=false'
+    Result := '--security=false';
 end;
 
 function DashboardUrl() : string;
@@ -383,21 +387,6 @@ begin
     FileLines.Free;
   end;
 end;
-
-procedure ConfigureQdbdDefault(FileName: String);
-begin
-  if IsSecurityEnabled() = true then
-  begin
-    ReplaceValue(FileName, 'cluster_private_file', ExpandConstant('{app}\conf\cluster_private.key'), ',')
-    ReplaceValue(FileName, 'user_list', ExpandConstant('{app}\conf\users.conf'), ' ')
-  end
-  else
-  begin
-    ReplaceValue(FileName, 'cluster_private_file', '', ',')
-    ReplaceValue(FileName, 'user_list', '', ' ')
-  end;
-end;
-
 
 procedure ConfigureQdbRestDefault(FileName: String);
 begin
