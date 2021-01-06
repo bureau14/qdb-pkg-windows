@@ -383,7 +383,7 @@ begin
   ReplaceValue(FileName, 'tls_certificate', ExpandConstant('{app}\conf\qdb_rest.cert.pem'), ',')
   ReplaceValue(FileName, 'tls_key', ExpandConstant('{app}\conf\qdb_rest.key.pem'), ',')
   ReplaceValue(FileName, 'log', GetQdbDir('log') + '\qdb_rest.log', ',')
-  ReplaceValue(FileName, 'assets', ExpandConstant('{app}\assets'), ' ')
+  ReplaceValue(FileName, 'assets', ExpandConstant('{app}\assets'), ',')
 end;
 
 procedure AddUser(Username: String; uid: Integer);
