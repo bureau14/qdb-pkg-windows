@@ -1,14 +1,14 @@
 #!/bin/bash
 
 server_file=`ls qdb-*server.zip`
-if [[ ${server_file} =~ (qdb-.+-windows-(64|32)bit-server.zip$) ]]; then
+if [[ ${server_file} =~ (qdb-.+-windows-(64|32)bit-(core2-server|server).zip$) ]]; then
     BITS=${BASH_REMATCH[2]}
 fi
 echo "BITS=$BITS"
 
-if [[ ${server_file} =~ (qdb-(.+)-windows-(64|32)bit-server.zip$) ]]; then
+if [[ ${server_file} =~ (qdb-(.+)-windows-(64|32)bit-(core2-server|server).zip$) ]]; then
     VERSION=${BASH_REMATCH[2]}
-fi  
+fi
 echo "VERSION=$VERSION"
 
 [[ $BITS = "64" ]] && SETUP=qdb-$VERSION-windows-64bit-setup || SETUP=qdb-$VERSION-windows-32bit-setup
