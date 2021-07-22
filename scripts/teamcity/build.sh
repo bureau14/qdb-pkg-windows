@@ -1,20 +1,19 @@
 #!/bin/bash
 
 server_file=`ls qdb-*server.zip`
-if [[ ${server_file} =~ (qdb-.+-windows-(64|32)bit-server.zip$) ]]; then
-    BITS=${BASH_REMATCH[2]}
+if [[ ${server_file} =~ (qdb-(.+)-windows-(64|32)bit(-core2)?-server.zip$) ]]; then
+    VERSION=${BASH_REMATCH[2]}
+    BITS=${BASH_REMATCH[3]}
+    CORE2=${BASH_REMATCH[4]}
 fi
 echo "BITS=$BITS"
-
-if [[ ${server_file} =~ (qdb-(.+)-windows-(64|32)bit-server.zip$) ]]; then
-    VERSION=${BASH_REMATCH[2]}
-fi  
 echo "VERSION=$VERSION"
+echo "CORE2=$CORE2"
 
-[[ $BITS = "64" ]] && SETUP=qdb-$VERSION-windows-64bit-setup || SETUP=qdb-$VERSION-windows-32bit-setup
+SETUP=qdb-$VERSION-windows-${BITS}bit${CORE2}-setup
 echo "SETUP=$SETUP"
 
-[[ $BITS = "64" ]] && ODBC_SETUP=qdb-odbc-driver-$VERSION-windows-64bit-setup || ODBC_SETUP=qdb-odbc-driver-$VERSION-windows-32bit-setup
+ODBC_SETUP=qdb-odbc-driver-$VERSION-windows-${BITS}bit${CORE2}-setup
 echo "ODBC_SETUP=$ODBC_SETUP"
 
 [[ $BITS = "64" ]] && QDBIS64=1 || QDBIS64=0
