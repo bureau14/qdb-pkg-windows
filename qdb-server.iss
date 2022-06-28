@@ -166,6 +166,7 @@ var
   QdbSecurityPageID: Integer;
   
   QdbDashboardInfoPage: TOutputMsgMemoWizardPage;
+  QdbDashboardInfoPageID: Integer;
 
 function GetQdbDir(Param: string): string;
 begin
@@ -258,6 +259,8 @@ begin
   Result := False;
   if PageID = AddUserPageID then
     Result := not IsSecurityEnabled();
+  if PageID = QdbDashboardInfoPageID then
+    Result := not WizardIsComponentSelected('dashboard');
 end;
 
 procedure InitializeWizard;
@@ -306,6 +309,7 @@ begin
       'Information', 'Please read the following important information before continuing.',
       'When you are ready to finish with Setup, click Next.',
       QdbDashboardInfoText());
+    QdbDashboardInfoPageID := QdbDashboardInfoPage.ID;
   end;
   Result := True;
 end;
