@@ -66,42 +66,41 @@ Name: client; Description: "Client installation"
 Name: custom; Description: "Custom installation"; Flags: iscustom
 
 [Components]
-Name: qdbd;   Description: "Server (qdbd)";              Types: full server;
-Name: utils;  Description: "Utilities (qdbsh...)";       Types: full client;
-Name: api;    Description: "C API (qdb_api.dll)";        Types: full client;
-Name: doc;    Description: "Documentation";              Types: full server client;
-Name: api_rest;  Description: "REST API (qdb_rest)";     Types: full server;
-Name: dashboard; Description: "Dashboard";               Types: full server;
+Name: qdbd;   Description: "Server (qdbd)";                   Types: full server;
+Name: utils;  Description: "Utilities (qdbsh...)";            Types: full client;
+Name: api;    Description: "C API (qdb_api.dll)";             Types: full client;
+Name: doc;    Description: "Documentation";                   Types: full server client;
+Name: rest;  Description: "REST API & Dashboard (qdb_rest)";  Types: full server;
 
 [Dirs]
 Components: qdbd;     Name: "{app}\share\qdb";      Flags: uninsneveruninstall
 Components: qdbd;     Name: "{app}\conf";           Flags: uninsneveruninstall
 Components: qdbd;     Name: "{code:GetQdbDir|log}"; Flags: uninsneveruninstall
 Components: qdbd;     Name: "{code:GetQdbDir|db}";  Flags: uninsneveruninstall
-Components: api_rest; Name: "{app}\share\qdb";      Flags: uninsneveruninstall
-Components: api_rest; Name: "{app}\conf";           Flags: uninsneveruninstall
-Components: api_rest; Name: "{code:GetQdbDir|log}"; Flags: uninsneveruninstall
+Components: rest; Name: "{app}\share\qdb";      Flags: uninsneveruninstall
+Components: rest; Name: "{app}\conf";           Flags: uninsneveruninstall
+Components: rest; Name: "{code:GetQdbDir|log}"; Flags: uninsneveruninstall
 
 [Files]
-Components: api;       Source: "{#QdbOutputDir}\bin\qdb_api.dll";              DestDir: "{sys}";         Flags: ignoreversion;
-Components: qdbd;      Source: "{#QdbOutputDir}\bin\qdb_service.exe";          DestDir: "{app}\bin";     Flags: ignoreversion;
-Components: qdbd;      Source: "{#QdbOutputDir}\bin\qdbd.exe";                 DestDir: "{app}\bin";     Flags: ignoreversion;
-Components: qdbd;      Source: "{#QdbOutputDir}\bin\qdb_cluster_keygen.exe";   DestDir: "{app}\bin";     Flags: ignoreversion;
-Components: qdbd;      Source: "{#QdbOutputDir}\bin\qdb_user_add.exe";         DestDir: "{app}\bin";     Flags: ignoreversion;
-Components: utils;     Source: "{#QdbOutputDir}\bin\qdb_max_conn.exe";         DestDir: "{app}\bin";     Flags: ignoreversion;
-Components: utils;     Source: "{#QdbOutputDir}\bin\qdbsh.exe";                DestDir: "{app}\bin";     Flags: ignoreversion;
-Components: utils;     Source: "{#QdbOutputDir}\bin\qdb_csv_generator.exe";    DestDir: "{app}\bin";     Flags: ignoreversion;
-Components: utils;     Source: "{#QdbOutputDir}\bin\qdb_export.exe";           DestDir: "{app}\bin";     Flags: ignoreversion;
-Components: utils;     Source: "{#QdbOutputDir}\bin\qdb_import.exe";           DestDir: "{app}\bin";     Flags: ignoreversion;
-Components: doc;       Source: "{#QdbOutputDir}\share\doc\qdb\*";              DestDir: "{app}\doc";     Flags: recursesubdirs;
-Components: api_rest;  Source: "{#QdbOutputDir}\bin\qdb_rest.exe";             DestDir: "{app}\bin";     Flags: ignoreversion;
-Components: api_rest;  Source: "{#QdbOutputDir}\bin\qdb_rest_service.exe";     DestDir: "{app}\bin";     Flags: ignoreversion;
-Components: api_rest;  Source: "{#QdbOutputDir}\bin\openssl.exe";              DestDir: "{app}\bin";     Flags: deleteafterinstall;
-Components: api_rest;  Source: "{#QdbOutputDir}\bin\libeay32.dll";             DestDir: "{app}\bin";     Flags: deleteafterinstall;
-Components: api_rest;  Source: "{#QdbOutputDir}\bin\ssleay32.dll";             DestDir: "{app}\bin";     Flags: deleteafterinstall;
-Components: api_rest;  Source: "{#QdbOutputDir}\etc\openssl.conf";             DestDir: "{app}";         Flags: deleteafterinstall;
-Components: api_rest;  Source: "{#QdbOutputDir}\etc\qdb_rest.conf.sample";     DestDir: "{app}\conf";    Flags: recursesubdirs;       AfterInstall: ConfigureQdbRestDefault(ExpandConstant('{app}\conf\qdb_rest.conf.sample'))
-Components: dashboard; Source: "{#QdbOutputDir}\assets\*";                     DestDir: "{app}\assets";  Flags: recursesubdirs;
+Components: api;      Source: "{#QdbOutputDir}\bin\qdb_api.dll";              DestDir: "{sys}";         Flags: ignoreversion;
+Components: qdbd;     Source: "{#QdbOutputDir}\bin\qdb_service.exe";          DestDir: "{app}\bin";     Flags: ignoreversion;
+Components: qdbd;     Source: "{#QdbOutputDir}\bin\qdbd.exe";                 DestDir: "{app}\bin";     Flags: ignoreversion;
+Components: qdbd;     Source: "{#QdbOutputDir}\bin\qdb_cluster_keygen.exe";   DestDir: "{app}\bin";     Flags: ignoreversion;
+Components: qdbd;     Source: "{#QdbOutputDir}\bin\qdb_user_add.exe";         DestDir: "{app}\bin";     Flags: ignoreversion;
+Components: utils;    Source: "{#QdbOutputDir}\bin\qdb_max_conn.exe";         DestDir: "{app}\bin";     Flags: ignoreversion;
+Components: utils;    Source: "{#QdbOutputDir}\bin\qdbsh.exe";                DestDir: "{app}\bin";     Flags: ignoreversion;
+Components: utils;    Source: "{#QdbOutputDir}\bin\qdb_csv_generator.exe";    DestDir: "{app}\bin";     Flags: ignoreversion;
+Components: utils;    Source: "{#QdbOutputDir}\bin\qdb_export.exe";           DestDir: "{app}\bin";     Flags: ignoreversion;
+Components: utils;    Source: "{#QdbOutputDir}\bin\qdb_import.exe";           DestDir: "{app}\bin";     Flags: ignoreversion;
+Components: doc;      Source: "{#QdbOutputDir}\share\doc\qdb\*";              DestDir: "{app}\doc";     Flags: recursesubdirs;
+Components: rest;     Source: "{#QdbOutputDir}\bin\qdb_rest.exe";             DestDir: "{app}\bin";     Flags: ignoreversion;
+Components: rest;     Source: "{#QdbOutputDir}\bin\qdb_rest_service.exe";     DestDir: "{app}\bin";     Flags: ignoreversion;
+Components: rest;     Source: "{#QdbOutputDir}\bin\openssl.exe";              DestDir: "{app}\bin";     Flags: deleteafterinstall;
+Components: rest;     Source: "{#QdbOutputDir}\bin\libeay32.dll";             DestDir: "{app}\bin";     Flags: deleteafterinstall;
+Components: rest;     Source: "{#QdbOutputDir}\bin\ssleay32.dll";             DestDir: "{app}\bin";     Flags: deleteafterinstall;
+Components: rest;     Source: "{#QdbOutputDir}\etc\openssl.conf";             DestDir: "{app}";         Flags: deleteafterinstall;
+Components: rest;     Source: "{#QdbOutputDir}\etc\qdb_rest.conf.sample";     DestDir: "{app}\conf";    Flags: recursesubdirs;       AfterInstall: ConfigureQdbRestDefault(ExpandConstant('{app}\conf\qdb_rest.conf.sample'))
+Components: rest;     Source: "{#QdbOutputDir}\assets\*";                     DestDir: "{app}\assets";  Flags: recursesubdirs;
 
 [Run]
 Components: utils; StatusMsg: "Adding shell user";          Filename: "cmd"; Parameters: "/c ""copy /Y ""{app}\conf\users.conf"" ""{app}\conf\users.conf.bak""";  AfterInstall: AddUsers(); Flags: runascurrentuser runhidden
@@ -125,29 +124,29 @@ Components: qdbd;  StatusMsg: "Create Server Configuration"; Filename: "cmd"; Pa
 
 Components: qdbd;  StatusMsg: "Start Server";                Filename: "sc.exe"; Parameters: "start qdbd";      Flags: runhidden
 
-Components: api_rest; StatusMsg: "Install REST API";                Filename: "{app}\bin\qdb_rest_service.exe";     Parameters: "/install"; Flags: runascurrentuser runhidden
+Components: rest; StatusMsg: "Install REST API";                Filename: "{app}\bin\qdb_rest_service.exe";     Parameters: "/install"; Flags: runascurrentuser runhidden
 
-Components: api_rest;  StatusMsg: "Grant access to conf directory"; Filename: "{sys}\icacls.exe";  Parameters: """{app}\conf"" /grant:r LocalService:(OI)(CI)RX";  Flags: runascurrentuser runhidden
-Components: api_rest;  StatusMsg: "Grant access to conf directory"; Filename: "{sys}\icacls.exe";  Parameters: """{app}\conf"" /grant:r Administrators:(OI)(CI)F"; Flags: runascurrentuser runhidden
-Components: api_rest;  StatusMsg: "Secure conf directory";          Filename: "{sys}\icacls.exe";  Parameters: """{app}\conf"" /inheritance:r";                    Flags: runascurrentuser runhidden
+Components: rest;  StatusMsg: "Grant access to conf directory"; Filename: "{sys}\icacls.exe";  Parameters: """{app}\conf"" /grant:r LocalService:(OI)(CI)RX";  Flags: runascurrentuser runhidden
+Components: rest;  StatusMsg: "Grant access to conf directory"; Filename: "{sys}\icacls.exe";  Parameters: """{app}\conf"" /grant:r Administrators:(OI)(CI)F"; Flags: runascurrentuser runhidden
+Components: rest;  StatusMsg: "Secure conf directory";          Filename: "{sys}\icacls.exe";  Parameters: """{app}\conf"" /inheritance:r";                    Flags: runascurrentuser runhidden
 
-Components: api_rest;  StatusMsg: "Grant access to log directory";  Filename: "{sys}\icacls.exe";  Parameters: """{code:GetQdbDir|log}"" /grant:r LocalService:(OI)(CI)F";      Flags: runascurrentuser runhidden
+Components: rest;  StatusMsg: "Grant access to log directory";  Filename: "{sys}\icacls.exe";  Parameters: """{code:GetQdbDir|log}"" /grant:r LocalService:(OI)(CI)F";      Flags: runascurrentuser runhidden
 
-Components: api_rest; StatusMsg: "Backup REST API Configuration";   Filename: "cmd"; Parameters: "/c ""move /Y ""{app}\conf\qdb_rest.conf"" ""{app}\conf\qdb_rest.conf.bak"" "" ";          Check: FileExists(ExpandConstant('{app}\conf\qdb_rest.conf'));                Flags: runascurrentuser runhidden 
-Components: api_rest; StatusMsg: "Create REST API Configuration";   Filename: "cmd"; Parameters: "/c ""copy /Y ""{app}\conf\qdb_rest.conf.sample"" ""{app}\conf\qdb_rest.conf"" "" "; AfterInstall: ConfigureQdbRestDefault(ExpandConstant('{app}\conf\qdb_rest.conf'));  Flags: runascurrentuser runhidden 
-Components: api_rest; StatusMsg: "Create REST API Certificate";     Filename: "{app}\bin\openssl.exe";  Parameters: "req -config ""{app}\openssl.conf"" -newkey rsa:4096 -nodes -sha512 -x509 -days 3650 -nodes -out ""{app}\conf\qdb_rest.cert.pem"" -keyout ""{app}\conf\qdb_rest.key.pem"" -subj /C=FR/L=Paris/O=Quasardb/CN=Quasardb"; Check: not FileExists(ExpandConstant('{app}\conf\api-rest.cert.pem')); Flags: runascurrentuser runhidden
+Components: rest; StatusMsg: "Backup REST API Configuration";   Filename: "cmd"; Parameters: "/c ""move /Y ""{app}\conf\qdb_rest.conf"" ""{app}\conf\qdb_rest.conf.bak"" "" ";          Check: FileExists(ExpandConstant('{app}\conf\qdb_rest.conf'));                Flags: runascurrentuser runhidden 
+Components: rest; StatusMsg: "Create REST API Configuration";   Filename: "cmd"; Parameters: "/c ""copy /Y ""{app}\conf\qdb_rest.conf.sample"" ""{app}\conf\qdb_rest.conf"" "" "; AfterInstall: ConfigureQdbRestDefault(ExpandConstant('{app}\conf\qdb_rest.conf'));  Flags: runascurrentuser runhidden 
+Components: rest; StatusMsg: "Create REST API Certificate";     Filename: "{app}\bin\openssl.exe";  Parameters: "req -config ""{app}\openssl.conf"" -newkey rsa:4096 -nodes -sha512 -x509 -days 3650 -nodes -out ""{app}\conf\qdb_rest.cert.pem"" -keyout ""{app}\conf\qdb_rest.key.pem"" -subj /C=FR/L=Paris/O=Quasardb/CN=Quasardb"; Check: not FileExists(ExpandConstant('{app}\conf\api-rest.cert.pem')); Flags: runascurrentuser runhidden
 
-Components: api_rest; StatusMsg: "Start REST API";       Filename: "sc.exe"; Parameters: "start qdb_rest";  Flags: runhidden
+Components: rest; StatusMsg: "Start REST API";       Filename: "sc.exe"; Parameters: "start qdb_rest";  Flags: runhidden
 
 [UninstallRun]
 Components: qdbd;     StatusMsg: "Stop Server";     Filename: "sc.exe"; Parameters: "stop qdbd";                              Flags: runhidden
 Components: qdbd;     StatusMsg: "Remove Server";   Filename: "{app}\bin\qdb_service.exe";            Parameters: "/remove";  Flags: runascurrentuser runhidden
-Components: api_rest; StatusMsg: "Stop REST API";   Filename: "sc.exe"; Parameters: "stop qdb_rest";                          Flags: runhidden
-Components: api_rest; StatusMsg: "Remove REST API"; Filename: "{app}\bin\qdb_rest_service.exe";       Parameters: "/remove";  Flags: runascurrentuser runhidden
+Components: rest; StatusMsg: "Stop REST API";   Filename: "sc.exe"; Parameters: "stop qdb_rest";                          Flags: runhidden
+Components: rest; StatusMsg: "Remove REST API"; Filename: "{app}\bin\qdb_rest_service.exe";       Parameters: "/remove";  Flags: runascurrentuser runhidden
 
 [Registry]
 Components: qdbd;     Root: HKLM; Subkey: "SYSTEM\CurrentControlSet\Services\qdbd";       ValueType: string; ValueName: "ConfigFile"; ValueData: "{app}\conf\qdbd.conf"
-Components: api_rest; Root: HKLM; Subkey: "SYSTEM\CurrentControlSet\Services\qdb_rest";   ValueType: string; ValueName: "ConfigFile"; ValueData: "{app}\conf\qdb_rest.conf"
+Components: rest; Root: HKLM; Subkey: "SYSTEM\CurrentControlSet\Services\qdb_rest";   ValueType: string; ValueName: "ConfigFile"; ValueData: "{app}\conf\qdb_rest.conf"
 
 [Icons]
 Components: utils;  Name: "{group}\quasardb shell"; Filename: "{app}\bin\qdbsh.exe"
@@ -260,7 +259,7 @@ begin
   if PageID = AddUserPageID then
     Result := not IsSecurityEnabled();
   if PageID = QdbDashboardInfoPageID then
-    Result := not WizardIsComponentSelected('dashboard');
+    Result := not WizardIsComponentSelected('rest');
 end;
 
 procedure InitializeWizard;
