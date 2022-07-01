@@ -104,7 +104,7 @@ Components: api_rest;  Source: "{#QdbOutputDir}\etc\qdb_rest.conf.sample";     D
 Components: dashboard; Source: "{#QdbOutputDir}\assets\*";                     DestDir: "{app}\assets";  Flags: recursesubdirs;
 
 [Run]
-Components: utils; StatusMsg: "Adding shell user";          Filename: "cmd"; Parameters: "/c ""move /Y ""{app}\conf\users.conf"" ""{app}\conf\users.conf.bak""";  AfterInstall: AddUsers(); Flags: runascurrentuser runhidden
+Components: utils; StatusMsg: "Adding shell user";          Filename: "cmd"; Parameters: "/c ""copy /Y ""{app}\conf\users.conf"" ""{app}\conf\users.conf.bak""";  AfterInstall: AddUsers(); Flags: runascurrentuser runhidden
 
 Components: qdbd;  StatusMsg: "Generating cluster key";         Filename: "{app}\bin\qdb_cluster_keygen.exe"; Parameters: "-p              ""{app}\share\qdb\cluster_public.key"" -s ""{app}\conf\cluster_private.key""";      Flags: runascurrentuser runhidden
 
@@ -282,12 +282,17 @@ begin
 end;
 
 procedure RegisterPreviousData(PreviousDataKey: Integer);
+var
+  uid: Integer;
 begin
   SetPreviousData(PreviousDataKey, 'DbDir', QdbDirPage.Values[0]);
   SetPreviousData(PreviousDataKey, 'LogDir', QdbDirPage.Values[1]);
   SetPreviousData(PreviousDataKey, 'LicenseFile', GetQdbLicenseFileDestination(''));
   SetPreviousData(PreviousDataKey, 'SecurityEnabled', SetSecurity());
   SetPreviousData(PreviousDataKey, 'Username', QdbAddUserPage.Values[0]);
+  
+  uid := StrToInt(GetPreviousData('UID', IntToStr(10))) + 1;
+  SetPreviousData(PreviousDataKey, 'UID', IntToStr(uid));
 end;
 
 function NextButtonClick(CurPageID: Integer): boolean;
@@ -374,6 +379,34 @@ begin
   end;
 end;
 
+function HasValue(const FileName, TagName, Comma: string): Boolean;
+var
+  I: Integer;
+  Tag: string;
+  Line: string;
+  TagPos: Integer;
+  FileLines: TStringList;
+begin
+  Result := False;
+  FileLines := TStringList.Create;
+  try
+    Tag := '"' + TagName + '"';
+    FileLines.LoadFromFile(FileName);
+    for I := 0 to FileLines.Count - 1 do
+    begin
+      Line := FileLines[I];
+      TagPos := Pos(Tag, Line);
+      if TagPos > 0 then
+      begin
+        Result := True;
+        Break;
+      end;
+    end;
+  finally
+    FileLines.Free;
+  end;
+end;
+
 procedure ConfigureQdbRestDefault(FileName: String);
 begin
   if IsSecurityEnabled() = true then
@@ -406,10 +439,31 @@ begin
 end;
 
 procedure AddUsers();
+var
+  uid: Integer;
+  user: String;
+  usersFile: String;
 begin
   if IsSecurityEnabled() = true then
   begin
-    AddUser('qdbsh', 3);
-    AddUser(QdbAddUserPage.Values[0], 10);
+    uid := StrToInt(GetPreviousData('UID', IntToStr(10)));
+    usersFile := ExpandConstant('{app}\conf\users.conf')
+    if FileExists(usersFile) then
+    begin
+      if HasValue(usersFile, 'qdbsh', ',') = false then
+      begin
+        AddUser('qdbsh', 3);
+      end;
+      user := QdbAddUserPage.Values[0];
+      if HasValue(usersFile, user, ',') = false then
+      begin
+        AddUser(user, uid);
+      end;
+    end
+    else
+    begin
+      AddUser('qdbsh', 3);
+      AddUser(user, uid);
+    end;
   end;
 end;
