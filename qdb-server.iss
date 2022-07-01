@@ -447,6 +447,7 @@ begin
   if IsSecurityEnabled() = true then
   begin
     uid := StrToInt(GetPreviousData('UID', IntToStr(10)));
+    user := QdbAddUserPage.Values[0];
     usersFile := ExpandConstant('{app}\conf\users.conf')
     if FileExists(usersFile) then
     begin
@@ -454,7 +455,6 @@ begin
       begin
         AddUser('qdbsh', 3);
       end;
-      user := QdbAddUserPage.Values[0];
       if HasValue(usersFile, user, ',') = false then
       begin
         AddUser(user, uid);
