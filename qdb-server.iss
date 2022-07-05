@@ -105,9 +105,9 @@ Components: rest;     Source: "{#QdbOutputDir}\assets\*";                     De
 [Run]
 Components: utils; StatusMsg: "Adding shell user";          Filename: "cmd"; Parameters: "/c ""copy /Y ""{app}\conf\users.conf"" ""{app}\conf\users.conf.bak""";  AfterInstall: AddUsers(); Flags: runascurrentuser runhidden
 
-Components: qdbd;  StatusMsg: "Generating cluster key";         Filename: "{app}\bin\qdb_cluster_keygen.exe"; Parameters: "-p              ""{app}\share\qdb\cluster_public.key"" -s ""{app}\conf\cluster_private.key""";      Flags: runascurrentuser runhidden
+Components: qdbd;  StatusMsg: "Generating cluster key";         Filename: "{app}\bin\qdb_cluster_keygen.exe"; Parameters: "-p ""{app}\share\qdb\cluster_public.key"" -s ""{app}\conf\cluster_private.key"""; Check: not FileExists(ExpandConstant('{app}\share\qdb\cluster_public.key')); Flags: runascurrentuser runhidden
 
-Components: qdbd;     StatusMsg: "Install Server";              Filename: "{app}\bin\qdb_service.exe";          Parameters: "/install"; Flags: runascurrentuser runhidden
+Components: qdbd;     StatusMsg: "Install Server";              Filename: "{app}\bin\qdb_service.exe";        Parameters: "/install"; Flags: runascurrentuser runhidden
 
 Components: qdbd;  StatusMsg: "Grant access to conf directory"; Filename: "{sys}\icacls.exe";  Parameters: """{app}\conf"" /grant:r LocalService:(OI)(CI)RX";  Flags: runascurrentuser runhidden
 Components: qdbd;  StatusMsg: "Grant access to conf directory"; Filename: "{sys}\icacls.exe";  Parameters: """{app}\conf"" /grant:r Administrators:(OI)(CI)F"; Flags: runascurrentuser runhidden
@@ -134,7 +134,7 @@ Components: rest;  StatusMsg: "Grant access to log directory";  Filename: "{sys}
 
 Components: rest; StatusMsg: "Backup REST API Configuration";   Filename: "cmd"; Parameters: "/c ""move /Y ""{app}\conf\qdb_rest.conf"" ""{app}\conf\qdb_rest.conf.bak"" "" ";          Check: FileExists(ExpandConstant('{app}\conf\qdb_rest.conf'));                Flags: runascurrentuser runhidden 
 Components: rest; StatusMsg: "Create REST API Configuration";   Filename: "cmd"; Parameters: "/c ""copy /Y ""{app}\conf\qdb_rest.conf.sample"" ""{app}\conf\qdb_rest.conf"" "" "; AfterInstall: ConfigureQdbRestDefault(ExpandConstant('{app}\conf\qdb_rest.conf'));  Flags: runascurrentuser runhidden 
-Components: rest; StatusMsg: "Create REST API Certificate";     Filename: "{app}\bin\openssl.exe";  Parameters: "req -config ""{app}\openssl.conf"" -newkey rsa:4096 -nodes -sha512 -x509 -days 3650 -nodes -out ""{app}\conf\qdb_rest.cert.pem"" -keyout ""{app}\conf\qdb_rest.key.pem"" -subj /C=FR/L=Paris/O=Quasardb/CN=Quasardb"; Check: not FileExists(ExpandConstant('{app}\conf\api-rest.cert.pem')); Flags: runascurrentuser runhidden
+Components: rest; StatusMsg: "Create REST API Certificate";     Filename: "{app}\bin\openssl.exe";  Parameters: "req -config ""{app}\openssl.conf"" -newkey rsa:4096 -nodes -sha512 -x509 -days 3650 -nodes -out ""{app}\conf\qdb_rest.cert.pem"" -keyout ""{app}\conf\qdb_rest.key.pem"" -subj /C=FR/L=Paris/O=Quasardb/CN=Quasardb"; Check: not FileExists(ExpandConstant('{app}\conf\qdb_rest.cert.pem')); Flags: runascurrentuser runhidden
 
 Components: rest; StatusMsg: "Start REST API";       Filename: "sc.exe"; Parameters: "start qdb_rest";  Flags: runhidden
 
