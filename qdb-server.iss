@@ -259,7 +259,7 @@ begin
   if PageID = AddUserPageID then
     Result := not IsSecurityEnabled();
   if PageID = QdbDashboardInfoPageID then
-    Result := not WizardIsComponentSelected('rest');
+    Result := not IsComponentSelected('rest');
 end;
 
 procedure InitializeWizard;
