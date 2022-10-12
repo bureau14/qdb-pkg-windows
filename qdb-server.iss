@@ -411,6 +411,7 @@ begin
   if IsSecurityEnabled() = true then
   begin
     ReplaceValue(FileName, 'cluster_public_key_file', ExpandConstant('{app}\share\qdb\cluster_public.key'), ',')
+    ReplaceValue(FileName, 'rest_private_key_file', ExpandConstant('{app}\conf\qdb_rest_private.key'), ',')
   end
   else
   begin
@@ -454,6 +455,10 @@ begin
       begin
         AddUser('qdbsh', 3);
       end;
+      if HasValue(usersFile, 'qdb_rest', ',') = false then
+      begin
+        AddUser('qdb_rest', 4);
+      end;
       if HasValue(usersFile, user, ',') = false then
       begin
         AddUser(user, uid);
@@ -462,6 +467,7 @@ begin
     else
     begin
       AddUser('qdbsh', 3);
+      AddUser('qdb_rest', 4);
       AddUser(user, uid);
     end;
   end;
