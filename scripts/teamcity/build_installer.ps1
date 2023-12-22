@@ -9,10 +9,10 @@ Write-Output "versions = $version"
 Write-Output "bits = $bits"
 Write-Output "core2 = $core2"
 
-$serverSetupName = "qdb-$version-windows-$($bits)bits$($core2)-setup"
+$serverSetupName = "qdb-$version-windows-$($bits)bit$($core2)-setup"
 Write-Output "server setup name = $serverSetupName"
 
-$odbcSetupName = "qdb-odbc-driver-$version-windows-$($bits)bits$($core2)-setup"
+$odbcSetupName = "qdb-odbc-driver-$version-windows-$($bits)bit$($core2)-setup"
 Write-Output "odbc setup name = $odbcSetupName"
 
 $qdbIs64 = If ( $bits -eq "64" ) {1} else {0}
