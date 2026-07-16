@@ -5,9 +5,9 @@ label: "{name}"
 key: "{slug}"
 
 commands:
-  - powershell -file windows_package_sign.ps1
+  - powershell -file qdb-code-signing\windows_package_sign.ps1
   - powershell -file scripts\teamcity\build_installer.ps1
-  - powershell -file windows_installer_sign.ps1
+  - powershell -file qdb-code-signing\windows_installer_sign.ps1
 
 
 plugins:
@@ -17,12 +17,13 @@ plugins:
           - project_id: "qdb-pkg-archives"
             files:
               - "*.zip"
-            output-dir: qdb
+            output-dir: .
           - project_id: "qdb-code-signing"
+            clean: true
             files:
               - "qdb-code-signing.tar.gz"
             extract: true
-            output-dir: .
+            output-dir: qdb-code-signing
       upload:
         files:
         - "*.exe"
