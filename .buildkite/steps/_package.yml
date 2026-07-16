@@ -5,9 +5,9 @@ label: "{name}"
 key: "{slug}"
 
 commands:
-  - windows_package_sign.ps1
-  - scripts\teamcity\build_installer.ps1
-  - windows_installer_sign.ps1
+  - powershell -file windows_package_sign.ps1
+  - powershell -file scripts\teamcity\build_installer.ps1
+  - powershell -file windows_installer_sign.ps1
 
 
 plugins:
