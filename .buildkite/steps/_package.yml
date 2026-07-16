@@ -1,0 +1,30 @@
+agents:
+  queue: "{queue}"
+
+label: "{name}"
+key: "{slug}"
+
+commands:
+  - windows_package_sign.ps1
+  - scripts\teamcity\build_installer.ps1
+  - windows_installer_sign.ps1
+
+
+plugins:
+  - bureau14/qdb-artifacts#master:
+      download:
+        clean: true
+        projects:
+          - project_id: "qdb-pkg-archives"
+            files:
+              - "*.zip"
+            output-dir: qdb
+          - project_id: "qdb-code-signing"
+            files:
+              - "qdb-code-signing.tar.gz"
+            extract: true
+            output-dir: .
+      upload:
+        files:
+        - "*.zip"
+      promote: {}
