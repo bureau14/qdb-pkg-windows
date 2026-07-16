@@ -25,5 +25,5 @@ plugins:
             output-dir: .
       upload:
         files:
-        - "*.zip"
+        - "*.exe"
       promote: {}
