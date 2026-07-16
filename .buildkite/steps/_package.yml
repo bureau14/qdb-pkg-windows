@@ -13,7 +13,6 @@ commands:
 plugins:
   - bureau14/qdb-artifacts#master:
       download:
-        clean: true
         projects:
           - project_id: "qdb-pkg-archives"
             files:
