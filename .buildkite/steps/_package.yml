@@ -8,6 +8,7 @@ commands:
   - powershell -file qdb-code-signing\windows_package_sign.ps1
   - powershell -file scripts\teamcity\build_installer.ps1
   - powershell -file qdb-code-signing\windows_installer_sign.ps1
+  - powershell -file scripts\teamcity\verify_signature.ps1 -Path *.exe
 
 
 plugins:
