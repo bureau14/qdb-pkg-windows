@@ -85,7 +85,7 @@ def generate_pipeline() -> Pipeline:
             tvars = {
                 "slug": slug,
                 "name": slug.replace("-", " ").title(),
-                "queue": p.queue("default")
+                "queue": "windows-sign"
             }
 
             artifact_vars_per_step = {
