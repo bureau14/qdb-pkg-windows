@@ -5,9 +5,13 @@ label: "{name}"
 key: "{slug}"
 
 commands:
+  - echo "+++ Sign packages"
   - powershell -file qdb-code-signing\windows_package_sign.ps1
+  - echo "+++ Build installer"
   - powershell -file scripts\teamcity\build_installer.ps1
+  - echo "+++ Sign installer"
   - powershell -file qdb-code-signing\windows_installer_sign.ps1
+  - echo "+++ Verify signature"
   - powershell -file scripts\teamcity\verify_signature.ps1 -Path *.exe
 
 
@@ -30,4 +34,5 @@ plugins:
       upload:
         files:
         - "*.exe"
+        - "*.zip"
       promote: {}
