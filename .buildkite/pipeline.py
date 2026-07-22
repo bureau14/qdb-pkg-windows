@@ -46,7 +46,9 @@ PLATFORMS: list[Platform] = [
 BUILD_TYPES = ["Release"]
 
 # Environment variable layering: global → step → os → os+step → platform compilers.
-GLOBAL_ENV: dict[str, str] = {}
+GLOBAL_ENV: dict[str, str] = {
+    "CERTIFICATE_PATH": "./qdb-code-signing/quasardb inc_.crt",
+}
 
 STEP_ENV: dict[str, dict[str, str]] = {}
 
