@@ -92,7 +92,7 @@ def generate_pipeline() -> Pipeline:
 
             artifact_vars_per_step = {
                 "download": {
-                    "git-ref": git_ref,
+                    "git_ref": git_ref,
                     "variant": dependency_slug,
                     "by_project": {
                         "qdb-code-signing": {
@@ -100,8 +100,8 @@ def generate_pipeline() -> Pipeline:
                         }
                     }
                 },
-                "upload": {"variant": slug, "git-ref": git_ref},
-                "promote": {"variant": slug, "git-ref": git_ref},
+                "upload": {"variant": slug, "git_ref": git_ref},
+                "promote": {"variant": slug, "git_ref": git_ref},
             }
 
             step = load_template(STEPS_DIR / f"_package.yml", **tvars)
