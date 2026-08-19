@@ -22,8 +22,8 @@ plugins:
           - project_id: "qdb-pkg-archives"
             files:
               - "*.zip"
-            exclude:
-              - "*nats*.zip"
+            # exclude:
+            #   - "*nats*.zip"
             output-dir: .
           - project_id: "qdb-code-signing"
             clean: true
