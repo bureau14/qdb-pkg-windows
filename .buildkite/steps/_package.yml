@@ -1,0 +1,37 @@
+agents:
+  queue: "{queue}"
+
+label: "{name}"
+key: "{slug}"
+
+commands:
+  - echo "+++ Sign packages"
+  - powershell -file qdb-code-signing\windows_package_sign.ps1
+  - echo "+++ Build installer"
+  - powershell -file scripts\cicd\build_installer.ps1
+  - echo "+++ Sign installer"
+  - powershell -file qdb-code-signing\windows_installer_sign.ps1
+  - echo "+++ Verify signature"
+  - powershell -file scripts\cicd\verify_signature.ps1 -Path *.exe
+
+
+plugins:
+  - bureau14/qdb-artifacts#master:
+      download:
+        projects:
+          - project_id: "qdb-pkg-archives"
+            files:
+              - "*.zip"
+            exclude:
+              - "*nats*.zip"
+            output-dir: .
+          - project_id: "qdb-code-signing"
+            clean: true
+            files:
+              - "qdb-code-signing.tar.gz"
+            extract: true
+            output-dir: qdb-code-signing
+      upload:
+        files:
+        - "*.exe"
+      promote: {}
