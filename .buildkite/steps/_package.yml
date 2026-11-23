@@ -16,7 +16,7 @@ commands:
 
 
 plugins:
-  - bureau14/qdb-artifacts#master:
+  - bureau14/qdb-artifacts#sc-20192/snapshot-dependencies:
       download:
         projects:
           - project_id: "qdb-pkg-archives"
