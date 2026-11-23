@@ -2,7 +2,7 @@ agents:
   queue: "{queue}"
 
 label: "{name}"
-key: "{slug}"
+step_id: package
 
 commands:
   - echo "+++ Sign packages"
@@ -20,12 +20,15 @@ plugins:
       download:
         projects:
           - project_id: "qdb-pkg-archives"
+            step: [api, server, utils, rest, odbc]
             files:
               - "*.zip"
             exclude:
               - "*nats*.zip"
             output-dir: .
           - project_id: "qdb-code-signing"
+            latest: true
+            step: build
             clean: true
             files:
               - "qdb-code-signing.tar.gz"
